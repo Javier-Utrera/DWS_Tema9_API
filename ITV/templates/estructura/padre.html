@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% load bootstrap_icons %}
+    <title>Document</title>
+    {% block script%}
+        <script type="text/javascript" src="{% static 'scripts/script.js' %}" ></script>
+    {% endblock%}
+</head>
+<body>
+
+    {% include 'estructura/menu.html'%}
+
+    
+    <div class="container p-2">
+        
+        {% block cabecera%}
+        {% endblock%}
+
+        {% block contenido%}
+        {% endblock%}
+
+    </div>
+
+    {% include 'estructura/footer.html'%}
+</body>
+</html>

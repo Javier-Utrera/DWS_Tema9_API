@@ -1,0 +1,36 @@
+{% extends "estructura/padre.html" %}
+
+{% block cabecera %}
+    <h1>Listado de clientes</h1>
+{% endblock %}
+
+{% block contenido %}
+
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    {% endif %}
+
+    {% block busqueda %}
+        <h2 class="display-5">{{ texto_busqueda|linebreaksbr }}</h1>
+    {% endblock %}
+
+    <div class="row">
+        {% for cliente in views_listar_cliente %}
+        <div class="col-sm-4 mb-2">
+            {% csrf_token %} 
+            {% include 'clientes/cliente.html' %}
+        </div>
+        {% empty %}
+            <h1>Lo siento, no existen clientes</h1>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+
+

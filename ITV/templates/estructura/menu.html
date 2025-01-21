@@ -1,0 +1,189 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-success px-4">
+
+    <a class="navbar-brand" href="#">
+      <img src="{% static  'imagenes/ba.jpg' %}" 
+          alt="" width="100" height="50" 
+          class="d-inline-block align-text-middle">
+    </a>
+
+    <p>Fecha Inicio:</br>{{ request.session.fecha_inicio}}</p>
+
+    <button class="navbar-toggler" type="button" 
+      data-bs-toggle="collapse" 
+      data-bs-target="#accionesBiblioteca" 
+      aria-controls="navbarAccionesBiblioteca" 
+      aria-expanded="false" 
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="accionesBiblioteca">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'urls_index' %}">Inicio</a>
+        </li>
+
+        
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" 
+              id="accionesDatos" 
+              role="button" 
+              data-bs-toggle="dropdown" 
+              aria-expanded="false">
+            Datos del usuario de la  sesion
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="accionesDatos">
+            <li><a class="dropdown-item">Nombre : {{ request.session.nombreusuario}}</a></li>
+            <li><a class="dropdown-item">Email : {{ request.session.email}}</a></li>
+            <li><a class="dropdown-item">Tipo de usuario : {{ request.session.rol}}</a></li>
+            <li><a class="dropdown-item">Grupo : {{ request.session.grupo}}</a></li>
+          </ul>
+        </li>
+
+
+        {% if request.user.is_authenticated and perms.ITV.add_cita%}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" 
+              id="accionesLibrosLink" 
+              role="button" 
+              data-bs-toggle="dropdown" 
+              aria-expanded="false">
+            Citas
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="accionesLibrosLink">
+            <li><a class="dropdown-item" href="{% url 'listar_citas' %}">Ver Citas</a></li>
+            <li><a class="dropdown-item" href="{% url 'procesar_cita' %}">Crear Citas</a></li>
+            <li><a class="dropdown-item" href="{% url 'buscar_cita' %}">Buscar Citas</a></li>
+          </ul>
+        </li>
+        {% endif %}
+
+        {% if request.user.is_authenticated and perms.ITV.add_clientes%}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+                id="accionesLibrosLink" 
+                role="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false">
+              Clientes
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accionesLibrosLink">
+              <li><a class="dropdown-item" href="{% url 'listar_clientes' %}">Ver Clientes</a></li>
+              <li><a class="dropdown-item" href="{% url 'procesar_cita' %}">Crear Clientes</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar_cita' %}">Buscar Clientes</a></li>
+            </ul>
+        </li>
+        {% endif %}
+
+        {% if request.user.is_authenticated and perms.ITV.add_estacion%}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+                id="accionesLibrosLink" 
+                role="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false">
+              Estaciones
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accionesLibrosLink">
+              <li><a class="dropdown-item" href="{% url 'listar_estaciones' %}">Ver Estaciones</a></li>
+              <li><a class="dropdown-item" href="{% url 'procesar_estacion' %}">Crear Estaciones</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar_estacion' %}">Buscar Estaciones</a></li>
+            </ul>
+        </li>
+        {% endif %}
+
+        {% if request.user.is_authenticated and perms.ITV.add_inspeccion%}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+                id="accionesLibrosLink" 
+                role="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false">
+              Inspecciones
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accionesLibrosLink">
+              <li><a class="dropdown-item" href="{% url 'listar_inspecciones' %}">Ver Inspecciones</a></li>
+              <li><a class="dropdown-item" href="{% url 'procesar_inspeccion' %}">Crear Inspeccion</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar_inspeccion' %}">Buscar Inspeccion</a></li>
+            </ul>
+        </li>
+        {% endif %}
+
+        {% if request.user.is_authenticated and perms.ITV.add_local %}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+                id="accionesLibrosLink" 
+                role="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false">
+              Locales
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accionesLibrosLink">
+              <li><a class="dropdown-item" href="{% url 'listar_locales' %}">Ver Locales</a></li>
+              <li><a class="dropdown-item" href="{% url 'procesar_local' %}">Crear Local</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar_local' %}">Buscar Local</a></li>
+            </ul>
+        </li>
+        {% endif %}
+
+        {% if request.user.is_authenticated and perms.ITV.add_trabajador %}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+                id="accionesLibrosLink" 
+                role="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false">
+              Trabajadores
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accionesLibrosLink">
+              <li><a class="dropdown-item" href="{% url 'listar_trabajadores' %}">Ver Trabajadores</a></li>
+              <li><a class="dropdown-item" href="{% url 'procesar_trabajador' %}">Crear Trabajador</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar_trabajador' %}">Buscar Trabajadores</a></li>
+            </ul>
+        </li>
+        {% endif %}
+
+        {% if request.user.is_authenticated and perms.ITV.add_vehiculo %}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+                id="accionesLibrosLink" 
+                role="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false">
+              Vehiculos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accionesLibrosLink">
+              <li><a class="dropdown-item" href="{% url 'listar_vehiculos' %}">Ver Vehiculos</a></li>
+              <li><a class="dropdown-item" href="{% url 'procesar_vehiculo' %}">Crear Vehiculo</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar_vehiculo' %}">Buscar Vehiculos</a></li>
+            </ul>
+        </li>
+      </ul>
+      {% endif %}
+
+      <div class="ml-2">
+        {% if not request.user.is_authenticated %}
+         <a class="btn btn-outline-warning" href="{% url 'login' %}">
+            Login
+        </a> 
+        {% endif %}
+
+        {% if not request.user.is_authenticated %}
+          <a class="btn btn-outline-warning" href="{% url 'registrar_usuario' %}">
+            {% csrf_token %} 
+              Registrarse
+          </a>
+         {% endif %}
+
+         {% if request.user.is_authenticated %}
+         <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %} 
+          <button class="btn btn-outline-warning" type="submit">Logout</button>
+        </form>
+        {% endif %}
+      </div> 
+           
+    </div>
+</nav>

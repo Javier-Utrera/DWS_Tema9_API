@@ -1,0 +1,48 @@
+{% extends "estructura/padre.html" %}
+
+{% block cabecera %}
+    <h1>Buscar Local/s</h1>
+{% endblock %}
+
+{% block contenido %}
+
+    {% load django_bootstrap5 %} 
+
+    <form action = "{% url 'buscar_local'%}" method = "GET">
+      
+        {% csrf_token %}
+        
+        <div class="mb-4">
+            {% bootstrap_field formulario.precio show_label=True %}
+            <div class="invalid-feedback">
+                {% for error in formulario.precio.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.metros show_label=True %}
+            <div class="invalid-feedback">
+                {% for error in formulario.metros.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.anio_arrendamiento show_label=True %}
+
+            <div class="invalid-feedback">
+                {% for error in formulario.anio_arrendamiento.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+            
+        </div>
+        
+
+        {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+
+    </form>
+{% endblock %}

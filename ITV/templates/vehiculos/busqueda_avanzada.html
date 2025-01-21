@@ -1,0 +1,45 @@
+{% extends "estructura/padre.html" %}
+
+{% block cabecera %}
+    <h1>Buscar Vehiculo/s</h1>
+{% endblock %}
+
+{% block contenido %}
+    {% load django_bootstrap5 %} 
+    <form action = "{% url 'buscar_vehiculo'%}" method = "GET">
+      
+        {% csrf_token %}
+        
+        <div class="mb-4">
+            {% bootstrap_field formulario.marca show_label=True %}
+            <div class="invalid-feedback">
+                {% for error in formulario.marca.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.potencia show_label=True %}
+            <div class="invalid-feedback">
+                {% for error in formulario.notas_potencia.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.matricula show_label=True %}
+
+            <div class="invalid-feedback">
+                {% for error in formulario.matricula.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+            
+        </div>
+        
+
+        {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+    </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "estructura/padre.html" %}
+
+{% block cabecera %}
+    <h1>Crear Vehiculos</h1>
+{% endblock %}
+
+{% block contenido %}
+    <form action = "" method = "POST">
+
+        {% load django_bootstrap5 %} 
+        {% csrf_token %}
+        
+        {% bootstrap_form formulario %}       
+
+        {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+    </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "estructura/padre.html" %}
+
+{% block cabecera %}
+    <h1>Listado de citas</h1>
+{% endblock %}
+
+{% block contenido %}
+    <div class="row">
+        {% for cita in views_citas %}
+        <div class="col-sm-4 mb-2">
+            {% include 'citas/cita.html' %}
+        </div>      
+        {% empty %}
+            <h1>Lo siento, no existen citas</h1>
+        {% endfor %}
+    </div>    
+{% endblock %}

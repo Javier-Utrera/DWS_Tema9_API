@@ -1,0 +1,71 @@
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Detalles del Vehículo</h5>
+        <p class="card-text"><strong>Id Vehículo:</strong> {{ vehiculo.id }}</p>
+        <p class="card-text"><strong>Marca:</strong> {{ vehiculo.marca|lower }}</p>
+        <p class="card-text"><strong>Modelo:</strong> {{ vehiculo.modelo|upper }}</p>
+        <p class="card-text"><strong>Número del Bastidor:</strong> {{ vehiculo.numero_bastidor|truncatechars:10 }}</p>
+        <p class="card-text"><strong>Tipo de Vehículo:</strong> {{ vehiculo.tipo_vehiculo }}</p>
+        <p class="card-text"><strong>Cilindrada:</strong> {{ vehiculo.cilindrada }}</p>
+        <p class="card-text"><strong>Potencia:</strong> {{ vehiculo.potencia }}</p>
+        <p class="card-text"><strong>Combustible:</strong> {{ vehiculo.combustible }}</p>
+        <p class="card-text"><strong>Masa Máxima Autorizada:</strong> {{ vehiculo.mma }}</p>
+        <p class="card-text"><strong>Asientos:</strong> {{ vehiculo.asientos }}</p>
+        <p class="card-text"><strong>Ejes:</strong> {{ vehiculo.ejes }}</p>
+        <p class="card-text"><strong>Ejes pares:</strong> {{ vehiculo.ejes|divisibleby:"2" }}</p>
+        <p class="card-text"><strong>DNI Propietario:</strong> {{ vehiculo.dni_propietario }}</p>
+        <p class="card-text"><strong>Matrícula:</strong> {{ vehiculo.matricula }}</p>
+
+        <h5 class="mt-4">Trabajadores que han realizado inspecciones:</h5>
+        <p class="card-text"><strong>Número de Trabajadores:</strong> {{ vehiculo.trabajadores.all|length }}</p>
+        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_trabajador_{{vehiculo.id}}" aria-expanded="false" aria-controls="collapse_trabajador_{{vehiculo.id}}">
+            Mostrar/Ocultar Datos
+        </button>
+        {% for trabajador in vehiculo.trabajadores.all %}
+        <div class="mb-3 p-2 rounded collapse" id="collapse_trabajador_{{vehiculo.id}}">
+            <p class="card-text"><strong>Nombre:</strong> {{ trabajador.nombre|lower }}</p>
+            <p class="card-text"><strong>Apellidos:</strong> {{ trabajador.apellidos|upper }}</p>
+            <p class="card-text"><strong>Puesto:</strong> {{ trabajador.puesto }}</p>
+            <p class="card-text"><strong>Sueldo:</strong> {{ trabajador.sueldo|add:"2" }}</p>
+            <p class="card-text"><strong>Observaciones:</strong> {{ trabajador.observaciones|capfirst }}</p>
+        </div>
+        {% empty %}
+            <h1>Lo siento, no existen trabajadores</h1>
+        {% endfor %}
+
+        <h5 class="mt-4">Inspecciones realizadas al vehículo:</h5>
+        <p class="card-text"><strong>Número de Inspecciones:</strong> {{ vehiculo.vehiculo_Inspeccion.all|length }}</p>
+        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_inspeccion_{{vehiculo.id}}" aria-expanded="false" aria-controls="collapse_inspeccion_{{vehiculo.id}}">
+            Mostrar/Ocultar Datos
+        </button>
+        {% for inspeccion in vehiculo.vehiculo_Inspeccion.all %}
+        <div class="mb-3 p-2 rounded collapse" id="collapse_inspeccion_{{vehiculo.id}}">
+            <p class="card-text"><strong>Id Inspección:</strong> {{ inspeccion.id }}</p>
+            <p class="card-text"><strong>Fecha:</strong> {{ inspeccion.fecha_inspeccion|date:"Y-m-d" }}</p>
+            <p class="card-text"><strong>Resultado:</strong> {{ inspeccion.resultado_inspeccion }}</p>
+            <p class="card-text"><strong>Notas:</strong> {{ inspeccion.notas_inspeccion|default:"Sin notas" }}</p>
+            <p class="card-text"><strong>Cliente Puntual:</strong> {{ inspeccion.cliente_puntual }}</p>
+        </div>
+        {% empty %}
+        <h1>Lo siento, no existen inspecciones</h1>
+    {% endfor %}
+    <br>
+    {% load bootstrap_icons %}
+        <div class="row btn-group">
+            <div class="mb-2">
+                <button type="button" 
+                        class="btn btn-outline-primary"> 
+                        <a href="{% url 'editar_vehiculo' vehiculo.id %}" ><span>{% bs_icon 'pencil' %}</span></a>
+                </button>
+            </div>
+        </div>
+        <div class="mb-2">
+            <form action = "{% url 'eliminar_vehiculo' vehiculo.id %}" method = "post"> 
+                {% csrf_token %}
+                <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                    <span>{% bs_icon 'trash' %}</span>
+                </button> 
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+{% extends "estructura/padre.html" %}
+
+{% block cabecera %}
+    <h1>Buscar Trabajador/es</h1>
+{% endblock %}
+
+{% block contenido %}
+
+    {% load django_bootstrap5 %} 
+
+    <form action = "{% url 'buscar_trabajador'%}" method = "GET">
+      
+        {% csrf_token %}
+        
+        <div class="mb-4">
+            {% bootstrap_field formulario.nombre show_label=True %}
+            <div class="invalid-feedback">
+                {% for error in formulario.nombre.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.sueldo show_label=True %}
+            <div class="invalid-feedback">
+                {% for error in formulario.sueldo.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.puesto show_label=True %}
+
+            <div class="invalid-feedback">
+                {% for error in formulario.puesto.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+            
+        </div>
+        
+
+        {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+
+    </form>
+{% endblock %}

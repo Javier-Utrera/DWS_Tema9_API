@@ -1,0 +1,68 @@
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Id cita: {{ cita.id }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Matrícula: {{ cita.matricula }}</h6>
+        <p class="card-text"><strong>Fecha de Matriculación:</strong> {{ cita.fecha_matriculacion|date:"Y-m-d" }}</p>
+        <p class="card-text"><strong>Número de Bastidor:</strong> {{ cita.numero_bastidor }}</p>
+
+        <h5 class="mt-3">Tipo de Inspección:</h5>
+        <p class="card-text">
+            {% if cita.tipo_inspeccion == 'PE' %}
+                <span class="text-success">Periódica</span>
+            {% elif cita.tipo_inspeccion == 'NOPE' %}
+                <span class="text-primary">No Periódica</span>
+            {% elif cita.tipo_inspeccion == 'VETAX' %}
+                <span class="text-warning">Verificación Taxímetro</span>
+            {% elif cita.tipo_inspeccion == 'VETAXV' %}
+                <span class="text-danger">Verificación Taxímetro Cambio Vehículo</span>
+            {% else %}
+                <span class="text-dark">Desconocido</span>
+            {% endif %}
+        </p>
+
+        <p class="card-text"><strong>Remolque:</strong> {{ cita.remolque }}</p>
+        <p class="card-text"><strong>Tipo de Pago:</strong> {{ cita.tipo_pago }}</p>
+        <p class="card-text"><strong>Fecha Propuesta:</strong> {{ cita.fecha_propuesta }}</p>
+        <p class="card-text"><strong>Hora Propuesta:</strong> {{ cita.hora_propuesta }}</p>
+        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#contenidoCollapse_{{ cita.id }}" aria-expanded="false" aria-controls="contenidoCollapse_{{ cita.id }}">
+            Mostrar/Ocultar Datos
+        </button>
+        <h5 class="mt-4">Datos del Cliente:</h5>
+        <div class="p-3 mb-3 rounded collapse" id="contenidoCollapse_{{ cita.id }}">
+            <p><strong>ID Cliente:</strong> {{ cita.cliente.id }}</p>
+            <p><strong>Nombre:</strong> {{ cita.cliente.nombre }}</p>
+            <p><strong>Apellidos:</strong> {{ cita.cliente.apellidos }}</p>
+            <p><strong>Sexo:</strong> {{ cita.cliente.sexo }}</p>
+            <p><strong>DNI:</strong> {{ cita.cliente.dni }}</p>
+            <p><strong>Teléfono:</strong> {{ cita.cliente.telefono }}</p>
+            <p><strong>Correo:</strong> {{ cita.cliente.correo }}</p>
+            <p><strong>Domicilio:</strong> {{ cita.cliente.domicilio }}</p>
+            <p><strong>Fecha de Nacimiento:</strong> {{ cita.cliente.fecha_nacimiento|date:"Y-m-d" }}</p>
+        </div>
+        <h5 class="mt-4">Datos de la Estación:</h5>
+        <div class="p-3 rounded collapse" id="contenidoCollapse_{{ cita.id }}">
+            <p><strong>Id Estación:</strong> {{ cita.estacion.id }}</p>
+            <p><strong>Nombre:</strong> {{ cita.estacion.nombre }}</p>
+            <p><strong>Municipio:</strong> {{ cita.estacion.munipio }}</p>
+            <p><strong>Eficiencia Energética:</strong> {{ cita.estacion.eficiencia_energetica }}</p>
+            <p><strong>Comunidad Autónoma:</strong> {{ cita.estacion.comunidad_autonoma }}</p>
+        </div>
+        {% load bootstrap_icons %}
+        <div class="row btn-group">
+            <div class="mb-2">
+                <button type="button" 
+                        class="btn btn-outline-primary"> 
+                        <a href="{% url 'editar_cita' cita.id %}" ><span>{% bs_icon 'pencil' %}</span></a>
+                </button>
+            </div>
+            <div class="mb-2">
+                <form action = "{% url 'eliminar_cita' cita.id %}" method = "post"> 
+                    {% csrf_token %}
+                    <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                        <span>{% bs_icon 'trash' %}</span>
+                    </button> 
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

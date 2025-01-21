@@ -1,0 +1,21 @@
+{% extends "estructura/padre.html" %}
+
+{% block cabecera %}
+    <h1>Editar cliente</h1>
+{% endblock %}
+
+{% block contenido %}
+
+{% load django_bootstrap5 %}
+<form action = "{% url 'editar_vehiculo' vehiculo.id %}" method = "post"> 
+    {% load django_bootstrap5 %} 
+    {% csrf_token %} 
+
+    {% bootstrap_form formulario %}       
+
+    {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+
+</form> 
+
+
+{% endblock %}

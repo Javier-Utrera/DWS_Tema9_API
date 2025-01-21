@@ -1,0 +1,16 @@
+{% extends "estructura/padre.html" %}
+
+{% block script%}
+    {% load static %}
+    <script type="text/javascript" src="{% static 'scripts/campos.js' %}" ></script>
+{% endblock%}
+
+{% block contenido %}
+{% load django_bootstrap5 %}
+<form action = "{% url 'registrar_usuario' %}" method = "post"> 
+    {% load django_bootstrap5 %} 
+    {% csrf_token %} 
+    {% bootstrap_form formulario %}       
+    {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+</form> 
+{% endblock %}

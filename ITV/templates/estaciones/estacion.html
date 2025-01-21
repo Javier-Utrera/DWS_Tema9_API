@@ -1,0 +1,93 @@
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Detalles de la Estación</h5>
+        <p class="card-text"><strong>Id Estación:</strong> {{ estacion.id }}</p>
+        <p class="card-text"><strong>Nombre:</strong> {{ estacion.nombre }}</p>
+        <p class="card-text"><strong>Municipio:</strong> {{ estacion.munipio }}</p>
+        <p class="card-text"><strong>Eficiencia Energética:</strong> {{ estacion.eficiencia_energetica }}</p>
+        <p class="card-text"><strong>Comunidad Autónoma:</strong> {{ estacion.comunidad_autonoma }}</p>
+
+        <h5 class="mt-4">Local Asociado</h5>
+        <div class="p-3 rounded">
+            <p class="card-text"><strong>ID Local:</strong> {{ estacion.local.id }}</p>
+            <p class="card-text"><strong>Precio:</strong> {{ estacion.local.precio }}</p>
+            <p class="card-text"><strong>Metros:</strong> {{ estacion.local.metros }}</p>
+            <p class="card-text"><strong>Año de Arrendamiento:</strong> {{ estacion.local.anio_arrendamiento }}</p>
+            <p class="card-text"><strong>Dueño:</strong> {{ estacion.local.duenio }}</p>
+        </div>
+
+        <h5 class="mt-4">Maquinaria Disponible</h5>
+        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#maquinariaCollapse_{{ estacion.id }}" aria-expanded="false" aria-controls="maquinariaCollapse_{{ estacion.id }}">
+            Mostrar/Ocultar Maquinaria
+        </button>
+        <div class="collapse" id="maquinariaCollapse_{{ estacion.id }}">
+            <div class="p-3 rounded">
+                {% for maquina in estacion.estacionitv_Maquinaria.all %}
+                    <p class="card-text"><strong>Id Máquina:</strong> {{ maquina.id }}</p>
+                    <p class="card-text"><strong>Nombre:</strong> {{ maquina.nombre }}</p>
+                    <p class="card-text"><strong>Tipo:</strong> {{ maquina.tipo }}</p>
+                    <p class="card-text"><strong>Último Mantenimiento:</strong> {{ maquina.ultimo_mantenimiento }}</p>
+                    <p class="card-text"><strong>¿En Funcionamiento?:</strong> {{ maquina.funcionando }}</p>
+                    <hr>
+                {% endfor %}
+            </div>
+        </div>
+
+        <h5 class="mt-4">Trabajadores</h5>
+        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#trabajadoresCollapse_{{ estacion.id }}" aria-expanded="false" aria-controls="trabajadoresCollapse_{{ estacion.id }}">
+            Mostrar/Ocultar Trabajadores
+        </button>
+        <div class="collapse" id="trabajadoresCollapse_{{ estacion.id }}">
+            <div class="p-3 rounded">
+                {% for trabajador in estacion.estacionItv_trabajadores.all %}
+                    <p class="card-text"><strong>Id Trabajador:</strong> {{ trabajador.id }}</p>
+                    <p class="card-text"><strong>Nombre:</strong> {{ trabajador.nombre }}</p>
+                    <p class="card-text"><strong>Apellidos:</strong> {{ trabajador.apellidos }}</p>
+                    <p class="card-text"><strong>Puesto:</strong> {{ trabajador.puesto }}</p>
+                    <p class="card-text"><strong>Sueldo:</strong> {{ trabajador.sueldo }}</p>
+                    <p class="card-text"><strong>Observaciones:</strong> {{ trabajador.observaciones }}</p>
+                    <hr>
+                {% endfor %}
+            </div>
+        </div>
+
+        <h5 class="mt-4">Citas Asociadas</h5>
+        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#citasCollapse_{{ estacion.id }}" aria-expanded="false" aria-controls="citasCollapse_{{ estacion.id }}">
+            Mostrar/Ocultar Citas
+        </button>
+        <div class="collapse" id="citasCollapse_{{ estacion.id }}">
+            <div class="p-3 rounded">
+                {% for cita in estacion.estacionitv_Cita.all %}
+                    <p class="card-text"><strong>Id Cita:</strong> {{ cita.id }}</p>
+                    <p class="card-text"><strong>Matrícula:</strong> {{ cita.matricula }}</p>
+                    <p class="card-text"><strong>Fecha de Matriculación:</strong> {{ cita.fecha_matriculacion|date:"Y-m-d" }}</p>
+                    <p class="card-text"><strong>Número de Bastidor:</strong> {{ cita.numero_bastidor }}</p>
+                    <p class="card-text"><strong>Tipo de Inspección:</strong> {{ cita.tipo_inspeccion }}</p>
+                    <p class="card-text"><strong>Remolque:</strong> {{ cita.remolque }}</p>
+                    <p class="card-text"><strong>Tipo de Pago:</strong> {{ cita.tipo_pago }}</p>
+                    <p class="card-text"><strong>Fecha Propuesta:</strong> {{ cita.fecha_propuesta }}</p>
+                    <p class="card-text"><strong>Hora Propuesta:</strong> {{ cita.hora_propuesta }}</p>
+                    <hr>
+                {% endfor %}
+            </div>
+        </div>
+        <br>
+        {% load bootstrap_icons %}
+        <div class="row btn-group">
+            <div class="mb-2">
+                <button type="button" 
+                        class="btn btn-outline-primary"> 
+                        <a href="{% url 'editar_estacion' estacion.id %}" ><span>{% bs_icon 'pencil' %}</span></a>
+                </button>
+            </div>
+            <div class="mb-2">
+                <form action = "{% url 'eliminar_estacion' estacion.id %}" method = "post"> 
+                    {% csrf_token %}
+                    <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                        <span>{% bs_icon 'trash' %}</span>
+                    </button> 
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

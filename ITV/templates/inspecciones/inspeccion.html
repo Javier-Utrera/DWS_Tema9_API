@@ -1,0 +1,66 @@
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Detalles de la Inspección</h5>
+        <p class="card-text"><strong>Id Inspección:</strong> {{ inspeccion.id }}</p>
+        <p class="card-text"><strong>Fecha:</strong> {{ inspeccion.fecha_inspeccion|date:"Y-m-d" }}</p>
+        <p class="card-text"><strong>Resultado:</strong> {{ inspeccion.resultado_inspeccion }}</p>
+        <p class="card-text"><strong>Notas:</strong> {{ inspeccion.notas_inspeccion }}</p>
+        <p class="card-text"><strong>Cliente Puntual:</strong> {{ inspeccion.cliente_puntual }}</p>
+
+        <h5 class="mt-4">Trabajador que realizó la inspección</h5>
+        <div class="p-3 rounded">
+            <p class="card-text"><strong>Id Trabajador:</strong> {{ inspeccion.trabajador.id }}</p>
+            <p class="card-text"><strong>Nombre:</strong> {{ inspeccion.trabajador.nombre }}</p>
+        </div>
+
+        <h5 class="mt-4">Vehículo inspeccionado</h5>
+        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_vehiculo_{{ inspeccion.id }}" aria-expanded="false" aria-controls="collapse_vehiculo_{{ inspeccion.id }}">
+            Mostrar/Ocultar Datos
+        </button>
+        <div class="p-3 rounded collapse" id="collapse_vehiculo_{{ inspeccion.id }}">
+            <p class="card-text"><strong>Id Vehículo:</strong> {{ inspeccion.vehiculo.id }}</p>
+            <p class="card-text"><strong>Marca:</strong> {{ inspeccion.vehiculo.marca }}</p>
+            <p class="card-text"><strong>Modelo:</strong> {{ inspeccion.vehiculo.modelo }}</p>
+            <p class="card-text"><strong>Número de Bastidor:</strong> {{ inspeccion.vehiculo.numero_bastidor }}</p>
+            <p class="card-text"><strong>Tipo de Vehículo:</strong> {{ inspeccion.vehiculo.tipo_vehiculo }}</p>
+            <p class="card-text"><strong>Cilindrada:</strong> {{ inspeccion.vehiculo.cilindrada }}</p>
+            <p class="card-text"><strong>Potencia:</strong> {{ inspeccion.vehiculo.potencia }}</p>
+            <p class="card-text"><strong>Combustible:</strong> {{ inspeccion.vehiculo.combustible }}</p>
+            <p class="card-text"><strong>Masa Máxima Autorizada:</strong> {{ inspeccion.vehiculo.mma }}</p>
+            <p class="card-text"><strong>Asientos:</strong> {{ inspeccion.vehiculo.asientos }}</p>
+            <p class="card-text"><strong>Ejes:</strong> {{ inspeccion.vehiculo.ejes }}</p>
+            <p class="card-text"><strong>DNI Propietario:</strong> {{ inspeccion.vehiculo.dni_propietario }}</p>
+            <p class="card-text"><strong>Matrícula:</strong> {{ inspeccion.vehiculo.matricula }}</p>
+        </div>
+
+        <h5 class="mt-4">Factura asociada a la inspección</h5>
+        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_factura_{{ inspeccion.id }}" aria-expanded="false" aria-controls="collapse_factura_{{ inspeccion.id }}">
+            Mostrar/Ocultar Datos
+        </button>
+        <div class="p-3 rounded collapse" id="collapse_factura_{{ inspeccion.id }}">
+            <p class="card-text"><strong>Id Factura:</strong> {{ inspeccion.inspeccion_Factura.id }}</p>
+            <p class="card-text"><strong>Importe:</strong> {{ inspeccion.inspeccion_Factura.importe }}</p>
+            <p class="card-text"><strong>¿Está pagado?:</strong> {{ inspeccion.inspeccion_Factura.pagado }}</p>
+            <p class="card-text"><strong>Fecha de Emisión:</strong> {{ inspeccion.inspeccion_Factura.fecha_emision_factura|date:"Y-m-d" }}</p>
+            <p class="card-text"><strong>Observaciones:</strong> {{ inspeccion.inspeccion_Factura.observaciones }}</p>
+        </div>
+        {% load bootstrap_icons %}
+        <br>
+        <div class="row btn-group">
+            <div class="mb-2">
+                <button type="button" 
+                        class="btn btn-outline-primary"> 
+                        <a href="{% url 'editar_inspeccion' inspeccion.id %}" ><span>{% bs_icon 'pencil' %}</span></a>
+                </button>
+            </div>
+            <div class="mb-2">
+                <form action = "{% url 'eliminar_inspeccion' inspeccion.id %}" method = "post"> 
+                    {% csrf_token %}
+                    <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                        <span>{% bs_icon 'trash' %}</span>
+                    </button> 
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

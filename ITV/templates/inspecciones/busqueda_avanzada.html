@@ -1,0 +1,35 @@
+{% extends "estructura/padre.html" %}
+
+{% block cabecera %}
+    <h1>Buscar Inspeccion/s</h1>
+{% endblock %}
+
+{% block contenido %}
+    {% load django_bootstrap5 %} 
+    <form action = "{% url 'buscar_inspeccion'%}" method = "GET">
+      
+        {% csrf_token %}
+        
+        <div class="mb-4">
+            {% bootstrap_field formulario.resultado_inspeccion show_label=True %}
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.notas_inspeccion show_label=True %}
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.fecha_inspeccion show_label=True %}
+
+            <div class="invalid-feedback">
+                {% for error in formulario.fecha_inspeccion.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+            
+        </div>
+        
+
+        {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+    </form>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "estructura/padre.html" %}
+
+{% block cabecera %}
+    <h1>Buscar Estacion/es</h1>
+{% endblock %}
+
+{% block contenido %}
+
+    {% load django_bootstrap5 %} 
+
+    <form action = "{% url 'buscar_estacion'%}" method = "GET">
+      
+        {% csrf_token %}
+        
+        <div class="mb-4">
+            {% bootstrap_field formulario.nombre show_label=True %}
+            <div class="invalid-feedback">
+                {% for error in formulario.nombre.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.munipio show_label=True %}
+            <div class="invalid-feedback">
+                {% for error in formulario.munipio.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.comunidad_autonoma show_label=True %}
+
+            <div class="invalid-feedback">
+                {% for error in formulario.comunidad_autonoma.errors %} 
+                    {{ error }}
+                {% endfor %}
+            </div>
+            
+        </div>
+        
+
+        {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+
+    </form>
+{% endblock %}
