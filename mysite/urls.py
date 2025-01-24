@@ -25,6 +25,7 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path('accounts/', include('django.contrib.auth.urls')),
     path('api/v1/', include('ITV.api_urls')),
+    path('oauth2/',include('oauth2_provider.urls',namespace='oauth2_provider'))
 ]
 handler400="ITV.views.mi_error_400"
 handler403="ITV.views.mi_error_403"

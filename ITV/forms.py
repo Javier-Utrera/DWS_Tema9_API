@@ -5,8 +5,6 @@ from datetime import *
 import re 
 from django.utils import timezone
 from django.contrib.auth.forms import UserCreationForm
-
-
     
 class CitaForm(ModelForm):
     class Meta:
@@ -212,8 +210,7 @@ class InspeccionForm(ModelForm):
             required=True,
             empty_label="Seleccione un vehículo"
         )
-        
-    
+         
 class BusquedaAvanzadaInspeccion(forms.Form):
     
     resultado_inspeccion=forms.CharField(required=False,label="Resultado de la inspeccion")

@@ -1,0 +1,1 @@
+curl -X POST "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&username=javier&password=javier&client_id=mi_aplicacion&client_secret=mi_clave_secreta"
