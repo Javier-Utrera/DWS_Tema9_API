@@ -15,8 +15,6 @@ class Usuario (AbstractUser):
     )
     rol = models.PositiveBigIntegerField(choices=ROLES,default=1)
 
-
-
 class Cliente(models.Model):
     email=models.CharField(max_length=50,blank=True)
     nombre=models.CharField(max_length=50,blank=True)
@@ -34,8 +32,6 @@ class Cliente(models.Model):
     
     def __str__(self):
         return self.usuario.username + " " + self.apellidos
-
-
 
 class Local(models.Model):
     precio=models.FloatField()
