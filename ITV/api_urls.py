@@ -8,4 +8,5 @@ urlpatterns =[
     path('citas/listar_citas',api_listar_citas),
     path('trabajadores/listar_trabajadores',api_listar_trabajadores),
     path('vehiculos/listar_vehiculos',api_listar_vehiculos),
+    path('inspecciones/listar_inspecciones',api_listar_inspecciones),
 ]

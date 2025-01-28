@@ -18,14 +18,22 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenVerifyView
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('ITV.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
     path('accounts/', include('django.contrib.auth.urls')),
+    
     path('api/v1/', include('ITV.api_urls')),
-    path('oauth2/',include('oauth2_provider.urls',namespace='oauth2_provider'))
+    # path('oauth2/',include('oauth2_provider.urls',namespace='oauth2_provider')),
+    
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]
 handler400="ITV.views.mi_error_400"
 handler403="ITV.views.mi_error_403"

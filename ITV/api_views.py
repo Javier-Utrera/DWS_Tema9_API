@@ -1,9 +1,9 @@
 from .models import *
 from .serializers import *
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from .forms import * 
 from django.db.models import Prefetch
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 #Listar---------------------------------------------------------
 @api_view(['GET'])
@@ -30,4 +30,10 @@ def api_listar_trabajadores(request):
 def api_listar_vehiculos(request):
     vehiculos=Vehiculo.objects.select_related("propietario").prefetch_related("trabajadores",Prefetch("vehiculo_Inspeccion")).all()
     serializer=TrabajadorSerializer(vehiculos,many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def api_listar_inspecciones(request):
+    inspecciones=Inspeccion.objects.select_related("trabajador","vehiculo").prefetch_related(Prefetch("inspeccion_Factura")).all()
+    serializer=InspeccionSerializer(inspecciones,many=True)
     return Response(serializer.data)
