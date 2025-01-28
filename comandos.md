@@ -35,3 +35,9 @@ http://localhost:8000/api/token/
 curl \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDU2Mjc2LCJpYXQiOjE3MzgwNTU5NzYsImp0aSI6ImE5ZTIxMzBhNGUwZTQ5NmQ5NmU3NjY5NDVmNTAxMjQ2IiwidXNlcl9pZCI6MTZ9.Ss3pYfIqH0EqkllMFaYjMUkCLXHgcSwcpoQEr5kSbb8" \
   http://localhost:8000/api/inspecciones/listar_inspecciones
+
+curl -X POST http://127.0.0.1:8000/api/token/verify/ -d "token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5NzkzNDczLCJpYXQiOjE3MzgwNjU0NzMsImp0aSI6IjlkMTZhYTU2MDE5ZjQ2YzA5ZWQ5ZThhOTI1MTJmODJiIiwidXNlcl9pZCI6MTZ9.GR5XuBpzFXqldMfgIszUUE1tFalknf0BeI52mNfvPAE"
+
+curl -X POST http://127.0.0.1:8000/api/token/verify/ -d "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5NzkzNDczLCJpYXQiOjE3MzgwNjU0NzMsImp0aSI6IjlkMTZhYTU2MDE5ZjQ2YzA5ZWQ5ZThhOTI1MTJmODJiIiwidXNlcl9pZCI6MTZ9.GR5XuBpzFXqldMfgIszUUE1tFalknf0BeI52mNfvPAE"
+
+
