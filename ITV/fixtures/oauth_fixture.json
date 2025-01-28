@@ -1,0 +1,479 @@
+[
+{
+    "model": "ITV.usuario",
+    "pk": 1,
+    "fields": {
+        "password": "Raise various sea sometimes quality eat win. Fine medical garden forget cost item perform. Market hard conference.",
+        "last_login": "2020-07-20T05:56:11.745",
+        "is_superuser": true,
+        "username": "reedkelli",
+        "first_name": "Austin",
+        "last_name": "Dean",
+        "email": "ljordan@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 2,
+    "fields": {
+        "password": "Capital race magazine close others vote owner.\nTraditional almost college. Both play read increase.",
+        "last_login": "2023-09-08T10:03:16.792",
+        "is_superuser": false,
+        "username": "alexander37",
+        "first_name": "Stephanie",
+        "last_name": "Lester",
+        "email": "moorejoan@example.net",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 3,
+    "fields": {
+        "password": "Four develop tonight bag. Challenge after that soon ago. Take know like serious.",
+        "last_login": "1976-01-22T21:49:18.133",
+        "is_superuser": false,
+        "username": "geoffrey75",
+        "first_name": "James",
+        "last_name": "Garrison",
+        "email": "samuel34@example.net",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 4,
+    "fields": {
+        "password": "Shake produce red kind rather.",
+        "last_login": "2012-01-17T15:15:26.920",
+        "is_superuser": false,
+        "username": "daniel57",
+        "first_name": "Timothy",
+        "last_name": "Noble",
+        "email": "jason58@example.net",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 5,
+    "fields": {
+        "password": "Play car them third scientist.",
+        "last_login": "2006-01-21T16:04:25.053",
+        "is_superuser": true,
+        "username": "joryan",
+        "first_name": "Rachel",
+        "last_name": "Frost",
+        "email": "pruittchristopher@example.net",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 6,
+    "fields": {
+        "password": "Green child ability build right cause painting. Sister program show without. Civil grow site him successful role.",
+        "last_login": "1985-09-21T04:19:28.214",
+        "is_superuser": true,
+        "username": "chadcamacho",
+        "first_name": "Eddie",
+        "last_name": "Garcia",
+        "email": "natalieford@example.org",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 7,
+    "fields": {
+        "password": "Step something plan deep though fight. Positive lead manager evidence three.",
+        "last_login": "1985-10-17T03:09:35.412",
+        "is_superuser": false,
+        "username": "traci53",
+        "first_name": "Dawn",
+        "last_name": "Bowen",
+        "email": "williamsbarry@example.net",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 8,
+    "fields": {
+        "password": "Sing everyone choose source simple send certainly. Small available up term wait best stop as.",
+        "last_login": "2006-01-14T15:55:47.854",
+        "is_superuser": true,
+        "username": "jenniferbarr",
+        "first_name": "Ariana",
+        "last_name": "Calhoun",
+        "email": "leonard87@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 9,
+    "fields": {
+        "password": "Perform similar medical away end. Design happen manage home reduce.",
+        "last_login": "1974-01-16T20:13:22.219",
+        "is_superuser": false,
+        "username": "jason17",
+        "first_name": "Natasha",
+        "last_name": "Meyer",
+        "email": "katieburns@example.net",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 10,
+    "fields": {
+        "password": "Save dog scientist hotel Democrat leg a. Push every sort perhaps.",
+        "last_login": "2009-01-13T13:16:13.054",
+        "is_superuser": false,
+        "username": "xking",
+        "first_name": "David",
+        "last_name": "Hicks",
+        "email": "brianlynn@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 11,
+    "fields": {
+        "password": "Person attack far recently establish station. Along whose audience.",
+        "last_login": "2006-10-27T01:05:09.236",
+        "is_superuser": false,
+        "username": "joseph36",
+        "first_name": "Blake",
+        "last_name": "Williams",
+        "email": "collierheather@example.net",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 12,
+    "fields": {
+        "password": "Call executive investment magazine bag employee. Writer behavior behind join physical produce fall. Remain mean capital.",
+        "last_login": "1981-07-28T13:54:52.978",
+        "is_superuser": false,
+        "username": "nperry",
+        "first_name": "Laura",
+        "last_name": "Bradford",
+        "email": "kevinpeters@example.net",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 13,
+    "fields": {
+        "password": "Gun decision majority continue career. Positive brother music theory beyond. Other outside society possible important.",
+        "last_login": "2019-01-29T11:22:24.070",
+        "is_superuser": true,
+        "username": "bmorrow",
+        "first_name": "Frederick",
+        "last_name": "Jones",
+        "email": "smithsean@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 14,
+    "fields": {
+        "password": "Center bar card million off. Claim near listen into chair. Health drug chance score down catch.",
+        "last_login": "2008-06-09T22:59:41.460",
+        "is_superuser": true,
+        "username": "nicholas43",
+        "first_name": "Jackson",
+        "last_name": "Miller",
+        "email": "rfrank@example.net",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 15,
+    "fields": {
+        "password": "Night data time seek during claim budget. Fact book hand live drug tax start save. Degree us seek result focus.",
+        "last_login": "1980-07-04T18:24:09.350",
+        "is_superuser": false,
+        "username": "zgray",
+        "first_name": "Crystal",
+        "last_name": "Hendricks",
+        "email": "michael16@example.org",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:07:04.726",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 16,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$OdDfYR00Ion1i8SWnMkv6G$+VvH8aUbo76Btg2JMFnnZ/7VWAZoUUyfcekm70tkhWk=",
+        "last_login": "2025-01-28T20:30:23.978",
+        "is_superuser": true,
+        "username": "javier",
+        "first_name": "",
+        "last_name": "",
+        "email": "javier@javier.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:08:41.613",
+        "rol": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 17,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$kud9OEVqd7KQqeVSEob0E4$ArX14NmVgsanBSkNVQdKaHRukA97wdHqnmyzDZMbV/k=",
+        "last_login": "2025-01-19T22:18:24.031",
+        "is_superuser": false,
+        "username": "cliente1",
+        "first_name": "",
+        "last_name": "",
+        "email": "cliente1@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:10:14.509",
+        "rol": 2,
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 18,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$nOolrpQr7WaHK76gCuySJb$IdSTKOsJPGEDfSZCvBgU8hIBLCDqMfaEJK3KBK9X1wI=",
+        "last_login": "2025-01-19T22:21:35.086",
+        "is_superuser": false,
+        "username": "trabajador1",
+        "first_name": "",
+        "last_name": "",
+        "email": "trabajador1@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:21:34.280",
+        "rol": 3,
+        "groups": [
+            2
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "ITV.usuario",
+    "pk": 19,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$fhxK6eJMcVDbrfcwi8RjdN$5Xq21VuQg/4y2021P4TXgHP7lXDFI443Br5ohR9ZPfo=",
+        "last_login": "2025-01-19T22:31:45.033",
+        "is_superuser": false,
+        "username": "trabajador2",
+        "first_name": "",
+        "last_name": "",
+        "email": "trabajador1@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-01-19T22:31:44.002",
+        "rol": 3,
+        "groups": [
+            2
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "oauth2_provider.application",
+    "pk": 1,
+    "fields": {
+        "client_id": "mi_aplicacion",
+        "user": 16,
+        "redirect_uris": "",
+        "post_logout_redirect_uris": "",
+        "client_type": "confidential",
+        "authorization_grant_type": "password",
+        "client_secret": "pbkdf2_sha256$870000$o3vfy8UtZTHkRL1KlsgdI2$tHbncHcUg/3HOU7AqqBBAEYTIpzeCnK9DiEVcyvkD0I=",
+        "hash_client_secret": true,
+        "name": "api_tiv",
+        "skip_authorization": false,
+        "created": "2025-01-28T20:31:53.775",
+        "updated": "2025-01-28T20:31:53.775",
+        "algorithm": "",
+        "allowed_origins": ""
+    }
+},
+{
+    "model": "oauth2_provider.accesstoken",
+    "pk": 1,
+    "fields": {
+        "user": 16,
+        "source_refresh_token": null,
+        "token": "wVT90wJDAxyBYr0cMRrEG9V1uk0iqu",
+        "token_checksum": "0e157ff88771cb777464d0d08a93708a3a8f222a966146841da62d1d4b81be22",
+        "id_token": null,
+        "application": 1,
+        "expires": "2025-01-29T06:32:02.962",
+        "scope": "read write groups ACCESS_TOKEN_EXPIRE_SECONDS",
+        "created": "2025-01-28T20:32:02.962",
+        "updated": "2025-01-28T20:32:02.962"
+    }
+},
+{
+    "model": "oauth2_provider.accesstoken",
+    "pk": 2,
+    "fields": {
+        "user": 17,
+        "source_refresh_token": null,
+        "token": "nDxI14Lf9ze8YXgyN1kcQHCYBjAnCC",
+        "token_checksum": "83b35293345d05665d14c218188acd83b66ae6414da715cedc87bca443585361",
+        "id_token": null,
+        "application": 1,
+        "expires": "2025-01-29T06:32:40.788",
+        "scope": "read write groups ACCESS_TOKEN_EXPIRE_SECONDS",
+        "created": "2025-01-28T20:32:40.788",
+        "updated": "2025-01-28T20:32:40.788"
+    }
+},
+{
+    "model": "oauth2_provider.accesstoken",
+    "pk": 3,
+    "fields": {
+        "user": 18,
+        "source_refresh_token": null,
+        "token": "WIC8b1DNpXo3a9R78pojk2m1Bg0QZS",
+        "token_checksum": "1da1bc29d114aaf55888c792f9113eeb2397f6628a5794a18ab85b4afe00e886",
+        "id_token": null,
+        "application": 1,
+        "expires": "2025-01-29T06:32:57.856",
+        "scope": "read write groups ACCESS_TOKEN_EXPIRE_SECONDS",
+        "created": "2025-01-28T20:32:57.856",
+        "updated": "2025-01-28T20:32:57.856"
+    }
+},
+{
+    "model": "oauth2_provider.refreshtoken",
+    "pk": 1,
+    "fields": {
+        "user": 16,
+        "token": "8NEnQ2odQL83TZl4YXRrxf19TveE31",
+        "application": 1,
+        "access_token": 1,
+        "token_family": "5b8d6ce9-6faf-4360-bb35-2faf7f56e447",
+        "created": "2025-01-28T20:32:02.963",
+        "updated": "2025-01-28T20:32:02.963",
+        "revoked": null
+    }
+},
+{
+    "model": "oauth2_provider.refreshtoken",
+    "pk": 2,
+    "fields": {
+        "user": 17,
+        "token": "uUC7xr2GOt5kBeeNnDgoSgjynYh1cm",
+        "application": 1,
+        "access_token": 2,
+        "token_family": "826e0589-2fc2-4f0c-acfb-66678b0ef631",
+        "created": "2025-01-28T20:32:40.789",
+        "updated": "2025-01-28T20:32:40.789",
+        "revoked": null
+    }
+},
+{
+    "model": "oauth2_provider.refreshtoken",
+    "pk": 3,
+    "fields": {
+        "user": 18,
+        "token": "dbCly7HWKwFldKcjLXrK72Nho0IPpx",
+        "application": 1,
+        "access_token": 3,
+        "token_family": "7c7948d9-242b-4af4-b29b-d61f892e917e",
+        "created": "2025-01-28T20:32:57.857",
+        "updated": "2025-01-28T20:32:57.857",
+        "revoked": null
+    }
+}
+]

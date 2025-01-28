@@ -142,7 +142,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 #Configuracion de Oauth
 OAUTH2_PROVIDER = {
-    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Acceso a los grupos','ACCESS_TOKEN_EXPIRE_SECONDS':360000000}
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Acceso a los grupos','ACCESS_TOKEN_EXPIRE_SECONDS':3600000}
 }
 
 REST_FRAMEWORK = {

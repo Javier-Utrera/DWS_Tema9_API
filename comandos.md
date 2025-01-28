@@ -12,6 +12,9 @@ source myvenv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 python manage.py migrate -> Creamos base de datos
+python manage.py loaddata ITV/fixtures/data.json
+python manage.py loaddata ITV/fixtures/datos2.json
+python manage.py loaddata ITV/fixtures/oauth_fixture.json
 python manage.py runserver 0.0.0.0:8080 -> Lanzamos el servidor
 
 curl \
