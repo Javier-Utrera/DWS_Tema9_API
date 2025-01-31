@@ -164,8 +164,7 @@ def buscar_cita(request):
             if fecha_propuestav is not None:
                 citas = citas.filter(fecha_propuesta=fecha_propuestav)
                 mensaje += "Fecha propuesta buscada: {fecha_propuestav.strftime('%d-%m-%Y')}\n"
-            
-            
+                     
             return render(request, "citas/listar_citas.html", {
                 "views_citas": citas,
                 "texto_busqueda": mensaje,
