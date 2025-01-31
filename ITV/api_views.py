@@ -38,3 +38,33 @@ def api_listar_inspecciones(request):
     inspecciones=Inspeccion.objects.select_related("trabajador","vehiculo").prefetch_related(Prefetch("inspeccion_Factura")).all()
     serializer=InspeccionSerializer(inspecciones,many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def buscar_cita(request):
+    if len(request.GET) > 0:
+        formulario = BusquedaAvanzadaCita(request.GET)
+        if formulario.is_valid():
+            mensaje = "Se ha buscado con los siguientes criterios:\n"
+                        
+            matriculav = formulario.cleaned_data.get("matricula")
+            tipo_inspeccionv = formulario.cleaned_data.get("tipo_inspeccion")
+            fecha_propuestav = formulario.cleaned_data.get("fecha_propuesta")
+                      
+            if matriculav != "":
+                citas = citas.filter(matricula__icontains=matriculav)
+                mensaje += "Matrícula buscada: {matriculav}\n"
+            if tipo_inspeccionv != "":
+                citas = citas.filter(tipo_inspeccion=tipo_inspeccionv)
+                mensaje += "Tipo de inspección buscado: {tipo_inspeccionv}\n"
+            if fecha_propuestav is not None:
+                citas = citas.filter(fecha_propuesta=fecha_propuestav)
+                mensaje += "Fecha propuesta buscada: {fecha_propuestav.strftime('%d-%m-%Y')}\n"
+                     
+            return render(request, "citas/listar_citas.html", {
+                "views_citas": citas,
+                "texto_busqueda": mensaje,
+            })
+    else:
+        formulario = BusquedaAvanzadaCita(None)
+   
+    return render(request, 'citas/busqueda_avanzada.html', {"formulario": formulario})
