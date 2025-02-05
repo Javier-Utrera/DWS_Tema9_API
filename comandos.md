@@ -43,4 +43,5 @@ curl -X POST http://127.0.0.1:8000/api/token/verify/ -d "token="eyJhbGciOiJIUzI1
 
 curl -X POST http://127.0.0.1:8000/api/token/verify/ -d "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5NzkzNDczLCJpYXQiOjE3MzgwNjU0NzMsImp0aSI6IjlkMTZhYTU2MDE5ZjQ2YzA5ZWQ5ZThhOTI1MTJmODJiIiwidXNlcl9pZCI6MTZ9.GR5XuBpzFXqldMfgIszUUE1tFalknf0BeI52mNfvPAE"
 
+SECRET_KEY=s$14&p!shywfap)=@xqn&wpwu^8@v5-jjqufn2^l5#f@(t&g-&
 

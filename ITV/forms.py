@@ -549,4 +549,3 @@ class RegistroForm(UserCreationForm):
         
         return self.cleaned_data
         
-        

@@ -329,8 +329,8 @@ def buscar_inspeccion(request):
             trabajador = Trabajador.objects.get(id=request.user.trabajador.id)
             
             inspecciones = inspecciones.filter(trabajador_id=trabajador.id)
-            resultado_inspeccionv=formulario.cleaned_data.get("resultado_inspeccion")
             
+            resultado_inspeccionv=formulario.cleaned_data.get("resultado_inspeccion")         
             notas_inspeccionv=formulario.cleaned_data.get("notas_inspeccion") 
             fecha_inspeccionv=formulario.cleaned_data.get("fecha_inspeccion") 
             

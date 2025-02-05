@@ -11,17 +11,20 @@ class FacturaSerializer(serializers.ModelSerializer):
         model = Factura
         fields = '__all__'
 
+#
 class VehiculoSerializer(serializers.ModelSerializer):
     class Meta:
         model= Vehiculo
         fields = '__all__'
+#        
 class InspeccionSerializer(serializers.ModelSerializer):
     trabajador=TrabajadorSoloSerializer()
     inspeccion_Factura=FacturaSerializer()
     vehiculo= VehiculoSerializer()
     class Meta:
         model = Inspeccion
-        fields = '__all__'       
+        fields = '__all__'    
+           
 class EstacionItvSerializer(serializers.ModelSerializer):
     class Meta:
         model = EstacionItv
@@ -31,7 +34,7 @@ class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente 
         fields = '__all__' 
-
+#
 class CitaSerializer(serializers.ModelSerializer):
     estacion = EstacionItvSerializer() 
     cliente = ClienteSerializer()
@@ -44,7 +47,7 @@ class ClienteSerializerCompleto(serializers.ModelSerializer):
     class Meta:
         model = Cliente 
         fields = '__all__' 
-        
+#        
 class TrabajadorSerializer(serializers.ModelSerializer):
     trabajador_Vehiculo=VehiculoSerializer(many=True)
     trabajador_Inspeccion=InspeccionSerializer(many=True)
