@@ -13,5 +13,5 @@ urlpatterns =[
     path('citas/buscar',api_buscar_cita),
     path('inspecciones/buscar',api_buscar_inspeccion),
     path('vehiculos/buscar',api_buscar_vehiculo),
-    # path('trabajadores/buscar',api_buscar_trabajador),
+    path('trabajadores/buscar',api_buscar_trabajador),
 ]

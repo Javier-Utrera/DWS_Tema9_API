@@ -135,3 +135,36 @@ def api_buscar_vehiculo(request):
             return Response(formulario.errors,status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({},status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def api_buscar_trabajador(request):
+    if (len(request.query_params) > 0):
+        formulario = BusquedaAvanzadaTrabajador(request.GET)
+        if formulario.is_valid():
+            mensaje = "Se ha buscado con los siguientes criterios:\n"
+            trabajadores=Trabajador.objects.prefetch_related("estacion",
+                                                     Prefetch("trabajador_Inspeccion"),
+                                                     Prefetch("trabajador_Vehiculo"))
+            
+            nombrev=formulario.cleaned_data.get("nombre")
+            sueldov=formulario.cleaned_data.get("sueldo") 
+            puestov=formulario.cleaned_data.get("puesto") 
+            
+            
+            if(nombrev != ""):
+                trabajadores=trabajadores.filter(nombre__contains=nombrev)
+                mensaje+="Texto que se ha buscado " + nombrev  +"\n"
+            if(not sueldov is None):
+                trabajadores=trabajadores.filter(sueldo=sueldov)
+                mensaje+="Sueldo que se ha buscado " + str(sueldov) + "\n"
+            if(puestov != ""):
+                trabajadores=trabajadores.filter(puesto=puestov)
+                mensaje+="Puesto que se esta buscando es" +  puestov+"\n"
+            
+            trabajadores=trabajadores.all()
+            serializer=TrabajadorSoloSerializer(trabajadores,many=True)     
+            return Response(serializer.data)
+        else:
+            return Response(formulario.errors,status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({},status=status.HTTP_400_BAD_REQUEST)
