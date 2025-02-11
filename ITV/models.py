@@ -163,8 +163,7 @@ class Inspeccion(models.Model):
     resultado_inspeccion = models.CharField(max_length=100)
     notas_inspeccion = models.TextField()
     cliente_puntual=models.BooleanField(default=True)
-    
-         
+           
 class Factura(models.Model):
     #relaciones
     #

@@ -14,4 +14,6 @@ urlpatterns =[
     path('inspecciones/buscar',api_buscar_inspeccion),
     path('vehiculos/buscar',api_buscar_vehiculo),
     path('trabajadores/buscar',api_buscar_trabajador),
+    
+    path('citas/crear',api_crear_cita)
 ]

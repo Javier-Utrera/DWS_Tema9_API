@@ -7,6 +7,20 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
+def api_errores(serializer,mensaje):
+    if serializer.is_valid():
+        try:
+            serializer.save()
+            return Response(mensaje)
+        except serializer.ValidationError as error:
+            return Response(error.detail,status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print(repr(error))
+            return Response(repr(error),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            
+
 #Listar---------------------------------------------------------
 @api_view(['GET'])
 def api_listar_clientes(request):
@@ -168,3 +182,13 @@ def api_buscar_trabajador(request):
             return Response(formulario.errors,status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({},status=status.HTTP_400_BAD_REQUEST)
+    
+#POST---------------------------------
+def api_crear_cita(request):
+    print(request.data)
+    citaSerializerCreate = CitaSerializerCreate(data=request.data)
+    api_errores(citaSerializerCreate,"Cita CREADA")
+    
+#PUT---------------------------------
+#PATCH---------------------------------
+#DELETE---------------------------------
