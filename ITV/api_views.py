@@ -55,6 +55,14 @@ def api_listar_inspecciones(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def api_listar_estaciones(request):
+    estaciones=EstacionItv.objects.select_related("local").prefetch_related(Prefetch("estacionitv_Cita"),
+                                                                        Prefetch("estacionitv_Maquinaria"),
+                                                                        Prefetch("estacionItv_trabajadores"),).all()
+    serializer=EstacionSerializer(estaciones,many=True)
+    return Response(serializer.data)
+#Buscar------------------------------
+@api_view(['GET'])
 def api_buscar_cita(request):
     if (len(request.query_params) > 0):
         formulario = BusquedaAvanzadaCita(request.GET)

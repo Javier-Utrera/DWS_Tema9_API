@@ -56,6 +56,11 @@ class TrabajadorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trabajador
         fields= '__all__'
+
+class EstacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EstacionItv
+        fields='__all__'
         
 class CitaSerializerCreate(serializers.ModelSerializer):
     class Meta:
