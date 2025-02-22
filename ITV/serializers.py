@@ -1,6 +1,7 @@
 from datetime import date
 from rest_framework import serializers
 from .models import *
+from .forms import *
 
 class TrabajadorSoloSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,7 +12,6 @@ class FacturaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Factura
         fields = '__all__'
-
 
 class VehiculoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,8 +48,14 @@ class ClienteSerializerCompleto(serializers.ModelSerializer):
     class Meta:
         model = Cliente 
         fields = '__all__' 
-        
+
+class UsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields= '__all__'   
+             
 class TrabajadorSerializer(serializers.ModelSerializer):
+    usuario=UsuarioSerializer()
     trabajador_Vehiculo=VehiculoSerializer(many=True)
     trabajador_Inspeccion=InspeccionSerializer(many=True)
     estacion=EstacionItvSerializer(many=True)
@@ -61,41 +67,302 @@ class EstacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = EstacionItv
         fields='__all__'
+
+class LocalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Local
+        fields = '__all__'
+
+
+class TrabajadorResumenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trabajador
+        fields = '__all__'
+
+class InspeccionResumenSerializer(serializers.ModelSerializer):
+    trabajador = TrabajadorResumenSerializer()
+
+    class Meta:
+        model = Inspeccion
+        fields = '__all__'
+
+class VehiculoSerializerCompleto(serializers.ModelSerializer):
+
+    propietario = ClienteSerializerCompleto()
+
+    trabajadores = TrabajadorSoloSerializer(read_only=True, many=True)
+
+    inspecciones = InspeccionSerializer(read_only=True, many=True, source='vehiculo_Inspeccion')
+
+    fecha_matriculacion = serializers.DateField(format='%d-%m-%Y')
+
+    tipo_vehiculo = serializers.CharField(source='get_tipo_vehiculo_display')
+    combustible = serializers.CharField(source='get_combustible_display')
+
+    class Meta:
+        model = Vehiculo
+        fields = (
+            'id',
+            'marca',
+            'modelo',
+            'numero_bastidor',
+            'tipo_vehiculo',
+            'cilindrada',
+            'potencia',
+            'combustible',
+            'mma',
+            'asientos',
+            'ejes',
+            'dni_propietario',
+            'matricula',
+            'fecha_matriculacion',
+            'propietario',
+            'trabajadores',
+            'inspecciones'
+        )
+
+
+   
+class LocalSerializerCreate(serializers.ModelSerializer):
+    class Meta:
+        model = Local
+        fields = ['precio', 'metros', 'anio_arrendamiento', 'duenio']
+
+    def validate_precio(self, precio):
+        if precio <= 0:
+            raise serializers.ValidationError("El precio debe ser mayor a 0.")
+        return precio
+
+    def validate_metros(self, metros):
+        if metros <= 0:
+            raise serializers.ValidationError("Los metros deben ser mayores a 0.")
+        return metros
+
+    def validate_anio_arrendamiento(self, anio_arrendamiento):
+        if anio_arrendamiento.year < 1900:
+            raise serializers.ValidationError("El año de arrendamiento debe ser mayor a 1900.")
+        return anio_arrendamiento
+
+class LocalSerializerActualizarDuenio(serializers.ModelSerializer):
+    class Meta:
+        model = Local
+        fields = ['duenio']
+
+    def validate_duenio(self, duenio):
+        if len(duenio.strip()) == 0:
+            raise serializers.ValidationError("El nombre del dueño no puede estar vacío.")
+        return duenio
         
+
 class CitaSerializerCreate(serializers.ModelSerializer):
+    
     class Meta:
         model = Cita
         fields =['cliente','estacion','matricula','fecha_matriculacion',
                  'numero_bastidor','tipo_inspeccion','remolque','tipo_pago',
                  'fecha_propuesta','hora_propuesta']
         
-        def validate_matricula(self,matricula):
-            if len(matricula) > 7:
-                raise serializers.ValidationError('La matrícula no puede tener más de 7 caracteres.')
-            return matricula
+    def validate_matricula(self,matricula):
+        if len(matricula) > 7:
+            raise serializers.ValidationError('La matrícula no puede tener más de 7 caracteres.')
+        return matricula
+    
+    def validate_fecha_propuesta(self,fecha_propuesta): 
+        fechaHoy = date.today()
+        if fecha_propuesta<fechaHoy:
+            raise serializers.ValidationError('La fecha seleccionada no puede ser inferior a la actual')
+        return fecha_propuesta
+    
+    def validate_estacion(self,estacion):
+        if not estacion:
+            raise serializers.ValidationError("Seleccione una estación válida.")
+        return estacion
+    
+class CitaSerializerActualizarMatricula(serializers.ModelSerializer):
+    class Meta:
+        model = Cita
+        fields = ["matricula"]
         
-        def validate_fecha_propuesta(self,fecha_propuesta):
-            fechaHoy = date.today()
-            if fecha_propuesta<fechaHoy:
-                raise serializers.ValidationError('La fecha seleccionada')
-            return fecha_propuesta   
-        def validate_estacion(self,estacion):
-            if len (estacion)<1:
-                raise serializers.ValidationError('Seleccione al menos una estacion')
-            return estacion
+    def validate_matricula(self,matricula):
+        citaMatricula = Cita.objects.filter(matricula=matricula).first()
+        if(not citaMatricula is None and citaMatricula.id != self.instance.id):
+            raise serializers.ValidationError('Ya existe una matricula con ese nombre')
+        return matricula
+ 
+ 
+class TrabajadorSerializerCreate(serializers.ModelSerializer):
+    estacion=EstacionItvSerializer()
+    class Meta:
+        model = Trabajador
+        fields = ['email', 'nombre', 'apellidos', 'puesto', 'sueldo', 'observaciones', 'estacion']
+
+
+    def validate_nombre(self, nombre):
+        if len(nombre) < 2:
+            raise serializers.ValidationError("El nombre debe contener al menos 2 caracteres.")
+        return nombre
+    
+    def validate_sueldo(self, sueldo):
+        if sueldo is not None and sueldo < 0:
+            raise serializers.ValidationError("El sueldo no puede ser negativo.")
+        return sueldo
+
+    def validate_puesto(self, puesto):
+        if puesto not in ['EM', 'FR', 'DI']: 
+            raise serializers.ValidationError("Seleccione un puesto válido.")
+        return puesto
+
+    def create(self, validated_data):
+        estacion = self.initial_data.get("estacion")
         
-        def create(self,validated_data):
-            cita=Cita.objects.create(
-                cliente=validated_data['cliente'],
-                estacion=validated_data['estacion'],
-                matricula=validated_data['matricula'],
-                numero_bastidor=validated_data['numero_bastidor'],
-                tipo_inspeccion=validated_data['tipo_inspeccion'],
-                remolque=validated_data['remolque'],
-                tipo_pago=validated_data['tipo_pago'],
-                fecha_matriculacion=validated_data['fecha_matriculacion'],
-                fecha_propuesta=validated_data['fecha_propuesta'],
-                hora_propuesta=validated_data['hora_propuesta']
+        usuario = validated_data.get("usuario", None)
+
+        if not usuario:
+            raise serializers.ValidationError({'usuario': ['No puedo crear un trabajador sin crear un usario antes, me he pasado 2h intentando averiguar que pasa, ya no puedo cambiarlo']})
+
+        try:
+            trabajador = Trabajador.objects.create(
+                email=validated_data["email"],
+                nombre=validated_data["nombre"],
+                apellidos=validated_data["apellidos"],
+                puesto=validated_data["puesto"],
+                sueldo=validated_data["sueldo"],
+                observaciones=validated_data["observaciones"]
             )
+        except Exception as e:
+            print("No puedo crear un trabajador sin crear un usario antes, me he pasado 2h intentando averiguar que pasa, ya no puedo cambiarlo", str(e))
+            raise serializers.ValidationError({"error": f"No se pudo crear el trabajador: {str(e)}"})
+
+        for estaci in estacion:
+                estacion_obj = EstacionItv.objects.get(id=estaci)
+                trabajador.estacion.add(estacion_obj)
+        return trabajador
+
+    def update(self, instance, validated_data):
+        estaciones = self.initial_data.get('estacion', [])
+
+        if len(estaciones) < 1:
+            raise serializers.ValidationError(
+                {'estacion': ['Debe seleccionar al menos una estación']}
+            )
+
+        instance.email = validated_data.get("email", instance.email)
+        instance.nombre = validated_data.get("nombre", instance.nombre)
+        instance.apellidos = validated_data.get("apellidos", instance.apellidos)
+        instance.puesto = validated_data.get("puesto", instance.puesto)
+        instance.sueldo = validated_data.get("sueldo", instance.sueldo)
+        instance.observaciones = validated_data.get("observaciones", instance.observaciones)
+
+        instance.save()
+
+
+        instance.estacion.clear() 
+        for estacion_id in estaciones:
+            estacion_obj = EstacionItv.objects.get(id=estacion_id)
+            instance.estacion.add(estacion_obj)
+
+        return instance
+
+class TrabajadorSerializerActualizarPuesto(serializers.ModelSerializer):
+    class Meta:
+        model = Trabajador
+        fields = ['puesto']
+
+    def validate_puesto(self, puesto):
+        if puesto not in ['EM', 'FR', 'DI']:
+            raise serializers.ValidationError("Seleccione un puesto válido.")
+        return puesto
+
+
+class VehiculoSerializerCreate(serializers.ModelSerializer):
+    
+    trabajadores = TrabajadorSoloSerializer(many=True)
+    class Meta:
+        model = Vehiculo
+        fields = ['marca', 'modelo', 'numero_bastidor', 'tipo_vehiculo', 'cilindrada',
+                  'potencia', 'combustible', 'mma', 'asientos', 'ejes', 'dni_propietario',
+                  'matricula', 'fecha_matriculacion', 'trabajadores']
+
+    def validate_marca(self, marca):
+        if len(marca) < 2:
+            raise serializers.ValidationError("La marca debe contener al menos 2 caracteres.")
+        return marca
+
+    def validate_matricula(self, matricula):
+        if len(matricula) > 7:
+            raise serializers.ValidationError("La matrícula no puede tener más de 7 caracteres.")
+        return matricula
+
+    def validate_cilindrada(self, cilindrada):
+        if cilindrada < 0:
+            raise serializers.ValidationError("La cilindrada no puede ser negativa.")
+        return cilindrada
+
+    def create(self, validated_data):
+        trabajadores = self.initial_data.get('trabajadores', [])
+        if len(trabajadores) < 1:
+            raise serializers.ValidationError(
+                {'trabajadores': ['Debe seleccionar al menos un trabajador.']}
+            )
+        vehiculo = Vehiculo.objects.create(
+            marca=validated_data["marca"],
+            modelo=validated_data["modelo"],
+            numero_bastidor=validated_data["numero_bastidor"],
+            tipo_vehiculo=validated_data["tipo_vehiculo"],
+            cilindrada=validated_data["cilindrada"],
+            potencia=validated_data["potencia"],
+            combustible=validated_data["combustible"],
+            mma=validated_data["mma"],
+            asientos=validated_data["asientos"],
+            ejes=validated_data["ejes"],
+            dni_propietario=validated_data["dni_propietario"],
+            matricula=validated_data["matricula"],
+            fecha_matriculacion=validated_data["fecha_matriculacion"],
+        )
+
+        for trabajador_id in trabajadores:
+            trabajador_obj = Trabajador.objects.get(id=trabajador_id)
+            Inspeccion.objects.create(trabajador_id=trabajador_obj, vehiculo=vehiculo)
+        return vehiculo
+
+    def update(self, instance, validated_data):
+        trabajadores = self.initial_data.get('trabajadores', [])
+
+        if len(trabajadores) < 1:
+            raise serializers.ValidationError(
+                {'trabajadores': ['Debe seleccionar al menos un trabajador.']}
+            )
+
+        instance.marca = validated_data.get("marca", instance.marca)
+        instance.modelo = validated_data.get("modelo", instance.modelo)
+        instance.numero_bastidor = validated_data.get("numero_bastidor", instance.numero_bastidor)
+        instance.tipo_vehiculo = validated_data.get("tipo_vehiculo", instance.tipo_vehiculo)
+        instance.cilindrada = validated_data.get("cilindrada", instance.cilindrada)
+        instance.potencia = validated_data.get("potencia", instance.potencia)
+        instance.combustible = validated_data.get("combustible", instance.combustible)
+        instance.mma = validated_data.get("mma", instance.mma)
+        instance.asientos = validated_data.get("asientos", instance.asientos)
+        instance.ejes = validated_data.get("ejes", instance.ejes)
+        instance.dni_propietario = validated_data.get("dni_propietario", instance.dni_propietario)
+        instance.matricula = validated_data.get("matricula", instance.matricula)
+        instance.fecha_matriculacion = validated_data.get("fecha_matriculacion", instance.fecha_matriculacion)
+
+        instance.save()
+
+        instance.trabajadores.clear()
+        for trabajador_id in trabajadores:
+            trabajador_obj = Trabajador.objects.get(id=trabajador_id)
+            Inspeccion.objects.create(trabajador_id=trabajador_obj, vehiculo=instance)
+
+        return instance
     
     
+class VehiculoSerializerActualizarMatricula(serializers.ModelSerializer):
+    class Meta:
+        model = Vehiculo
+        fields = ['matricula']
+
+    def validate_matricula(self, matricula):
+        if len(matricula) > 7:
+            raise serializers.ValidationError("La matrícula no puede tener más de 7 caracteres.")
+        return matricula

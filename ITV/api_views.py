@@ -6,6 +6,8 @@ from django.db.models import Prefetch
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import viewsets
+
 
 def api_errores(serializer,mensaje):
     if serializer.is_valid():
@@ -21,7 +23,13 @@ def api_errores(serializer,mensaje):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
             
 
-#Listar---------------------------------------------------------
+#Listar--------------------------------------------------------------------------------------------------------------------------------------------------------
+@api_view(['GET'])
+def api_listar_locales(request):
+    locales = Local.objects.all()
+    serializer = LocalSerializer(locales, many=True)
+    return Response(serializer.data)
+
 @api_view(['GET'])
 def api_listar_clientes(request):
     clientes = Cliente.objects.prefetch_related('cliente_cita').all() 
@@ -45,7 +53,9 @@ def api_listar_trabajadores(request):
 @api_view(['GET'])
 def api_listar_vehiculos(request):
     vehiculos=Vehiculo.objects.select_related("propietario").prefetch_related("trabajadores",Prefetch("vehiculo_Inspeccion")).all()
-    serializer=TrabajadorSerializer(vehiculos,many=True)
+    serializer=VehiculoSerializerCompleto(vehiculos,many=True)
+    # print(serializer.error_messages)
+    # print(serializer._data)
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -56,12 +66,71 @@ def api_listar_inspecciones(request):
 
 @api_view(['GET'])
 def api_listar_estaciones(request):
-    estaciones=EstacionItv.objects.select_related("local").prefetch_related(Prefetch("estacionitv_Cita"),
-                                                                        Prefetch("estacionitv_Maquinaria"),
-                                                                        Prefetch("estacionItv_trabajadores"),).all()
+    estaciones=EstacionItv.objects.select_related("local").all()
     serializer=EstacionSerializer(estaciones,many=True)
     return Response(serializer.data)
-#Buscar------------------------------
+
+#Obtener-----------------------------------------------------------------------------------------------------------------------------------
+@api_view(['GET']) 
+def api_cita_obtener(request,cita_id):
+    cita = Cita.objects.select_related("cliente", "estacion")
+    cita = cita.get(id=cita_id)
+    serializer = CitaSerializer(cita)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def api_local_obtener(request, local_id):
+    local = Local.objects.get(id=local_id)
+    serializer = LocalSerializer(local)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def api_trabajador_obtener(request, trabajador_id):
+    trabajador = Trabajador.objects.prefetch_related("estacion").get(id=trabajador_id)
+    serializer = TrabajadorSerializer(trabajador)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def api_obtener_vehiculo(request, vehiculo_id):
+    vehiculo = Vehiculo.objects.select_related("propietario").prefetch_related("trabajadores", Prefetch("vehiculo_Inspeccion")).get(id=vehiculo_id)
+    serializer = VehiculoSerializerCompleto(vehiculo)
+    # print(serializer.error_messages)
+    # print(serializer._data)
+    return Response(serializer.data)
+#Buscar-----------------------------------------------------------------------------------------------------------------------------------
+@api_view(['GET'])
+def api_buscar_local(request):
+    if len(request.query_params) > 0:
+        formulario = BusquedaAvanzadaLocal(request.GET)
+        
+        if formulario.is_valid():
+            mensaje = "Se ha buscado con los siguientes criterios:\n"
+            
+            QSlocales = Local.objects.all()
+            
+            precio_v = formulario.cleaned_data.get("precio")
+            metros_v = formulario.cleaned_data.get("metros")
+            duenio_v = formulario.cleaned_data.get("duenio")
+
+            if precio_v is not None:
+                QSlocales = QSlocales.filter(precio__lte=precio_v)
+                mensaje += f"Precio máximo buscado: {precio_v}\n"
+            if metros_v is not None:
+                QSlocales = QSlocales.filter(metros__gte=metros_v)
+                mensaje += f"Metros mínimos buscados: {metros_v}\n"
+            if duenio_v:
+                QSlocales = QSlocales.filter(duenio__icontains=duenio_v)
+                mensaje += f"Dueño buscado: {duenio_v}\n"
+            
+            locales = QSlocales.all()
+            serializer = LocalSerializer(locales, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET'])
 def api_buscar_cita(request):
     if (len(request.query_params) > 0):
@@ -191,12 +260,126 @@ def api_buscar_trabajador(request):
     else:
         return Response({},status=status.HTTP_400_BAD_REQUEST)
     
-#POST---------------------------------
+#POST-----------------------------------------------------------------------------------------------------------------------------------
+@api_view(['POST'])
+def api_crear_local(request):
+    print(request.data)
+    localSerializer = LocalSerializerCreate(data=request.data)
+    return api_errores(localSerializer, "Local CREADO")
+
+@api_view(['POST'])
 def api_crear_cita(request):
     print(request.data)
     citaSerializerCreate = CitaSerializerCreate(data=request.data)
-    api_errores(citaSerializerCreate,"Cita CREADA")
+    return api_errores(citaSerializerCreate,"Cita CREADA")
+
+@api_view(['POST'])
+def api_crear_trabajador(request):
+    serializer = TrabajadorSerializerCreate(data=request.data)
+    return api_errores(serializer, "Trabajador CREADO")
+
+@api_view(['POST'])
+def api_crear_vehiculo(request):
+    serializer = VehiculoSerializerCreate(data=request.data)
+    return api_errores(serializer, "Vehículo CREADO")
     
-#PUT---------------------------------
-#PATCH---------------------------------
-#DELETE---------------------------------
+#PUT---------------------------------------------------------------------------------------------------------------------------------------
+@api_view(['PUT'])
+def api_editar_local(request, local_id):
+    local = Local.objects.get(id=local_id)
+    localSerializer = LocalSerializerCreate(data=request.data, instance=local)
+    return api_errores(localSerializer, "Local EDITADO")
+
+@api_view(['PUT'])
+def api_editar_cita(request,cita_id):
+    cita=Cita.objects.get(id=cita_id)
+    citaSerializerCreate = CitaSerializerCreate(data=request.data,instance=cita)
+    return api_errores(citaSerializerCreate,"Cita EDITADA")
+
+@api_view(['PUT'])
+def api_editar_trabajador(request, trabajador_id):
+    trabajador = Trabajador.objects.get(id=trabajador_id)
+    serializer = TrabajadorSerializerCreate(data=request.data, instance=trabajador)
+    return api_errores(serializer, "Trabajador EDITADO")
+
+@api_view(['PUT'])
+def api_editar_vehiculo(request, vehiculo_id):
+    vehiculo = Vehiculo.objects.get(id=vehiculo_id)
+    print("📌 JSON recibido en la API (PUT):", request.data)
+    serializer = VehiculoSerializerCreate(data=request.data, instance=vehiculo)
+    return api_errores(serializer, "Vehículo EDITADO")
+
+#PATCH----------------------------------------------------------------------------------------------------------------------------------------
+@api_view(['PATCH'])
+def api_actualizar_local_duenio(request, local_id):
+    local = Local.objects.get(id=local_id)
+    serializer = LocalSerializerActualizarDuenio(data=request.data, instance=local)
+    return api_errores(serializer, "Dueño del local EDITADO")
+
+@api_view(['PATCH'])
+def api_actualizar_cita_matricula(request,cita_id):
+    cita=Cita.objects.get(id=cita_id)
+    serializers = CitaSerializerActualizarMatricula(data=request.data, instance = cita)
+    return api_errores(serializers,"Matricula de la cita EDITADA")
+
+@api_view(['PATCH'])
+def api_actualizar_trabajador_puesto(request, trabajador_id):
+    trabajador = Trabajador.objects.get(id=trabajador_id)
+    serializer = TrabajadorSerializerActualizarPuesto(data=request.data, instance=trabajador)
+    return api_errores(serializer, "Puesto del Trabajador EDITADO")
+
+@api_view(['PATCH'])
+def api_actualizar_vehiculo_matricula(request, vehiculo_id):
+    print(f"📌 ID del vehículo recibido: {vehiculo_id}") 
+    vehiculo = Vehiculo.objects.get(id=vehiculo_id)
+    serializer = VehiculoSerializerActualizarMatricula(data=request.data, instance=vehiculo)
+    return api_errores(serializer, "Matrícula del Vehículo ACTUALIZADA")
+#DELETE----------------------------------------------------------------------------------------------------------------------------------------
+@api_view(['DELETE'])
+def api_eliminar_local(request, local_id):
+    local = Local.objects.get(id=local_id)
+    try:
+        local.delete()
+        return Response("Local eliminado correctamente")
+    except Exception as error:
+        return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['DELETE'])
+def api_eliminar_cita(request,cita_id):
+    cita=Cita.objects.get(id=cita_id)
+    try:
+        cita.delete()
+        return Response("Cita eliminada correctamente")
+    except Exception as error:
+        return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['DELETE'])
+def api_eliminar_trabajador(request, trabajador_id):
+    trabajador = Trabajador.objects.get(id=trabajador_id)
+    try:
+        trabajador.delete()
+        return Response("Trabajador eliminado correctamente")
+    except Exception as error:
+        return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['DELETE'])
+def api_eliminar_vehiculo(request, vehiculo_id):
+
+    vehiculo = Vehiculo.objects.get(id=vehiculo_id)
+    try:
+        vehiculo.delete()
+        return Response("Vehículo eliminado correctamente")
+    except Exception as error:
+        return Response(str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+#ViewSet------------------
+class LocalViewSet(viewsets.ModelViewSet):
+    
+    queryset = Local.objects.all()
+
+    def get_serializer_class(self):
+        # Para las acciones de creación y actualización usamos el serializer con validaciones
+        if self.action in ['create', 'update', 'partial_update']:
+            return LocalSerializerCreate
+        # Para listar y obtener usamos el serializer completo
+        return LocalSerializer
