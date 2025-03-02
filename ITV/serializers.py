@@ -2,6 +2,7 @@ from datetime import date
 from rest_framework import serializers
 from .models import *
 from .forms import *
+import re
 
 class TrabajadorSoloSerializer(serializers.ModelSerializer):
     class Meta:
@@ -366,3 +367,53 @@ class VehiculoSerializerActualizarMatricula(serializers.ModelSerializer):
         if len(matricula) > 7:
             raise serializers.ValidationError("La matrícula no puede tener más de 7 caracteres.")
         return matricula
+    
+class UsuarioSerializerRegistro(serializers.Serializer):
+    
+    username = serializers.CharField()
+    email = serializers.EmailField()
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+    
+    puesto=serializers.CharField(required=False,allow_blank=True)
+    
+    fecha_nacimiento = serializers.CharField(required=False, allow_blank=True)
+    
+    apellidos = serializers.CharField(required=False, allow_blank=True)
+    dni = serializers.CharField(required=False, allow_blank=True)
+
+    def validate_username(self, username):
+        usuario = Usuario.objects.filter(username=username).first()
+        if usuario:
+            raise serializers.ValidationError('Ya existe ese usuario')
+        return username
+
+    def validate_email(self, email):
+        regex_email = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        if not re.fullmatch(regex_email, email):
+            raise serializers.ValidationError("El formato del email no es correcto")
+        return email
+
+    def validate_dni_unico(self,dni):
+        cliente = Cliente.objects.filter(dni=dni).first()
+        if cliente:
+            raise serializers.ValidationError('Ya existe un cliente con este DNI')
+        return dni
+    
+    def validate_dni(self, dni):
+        regex_dni = r"^\d{8}[A-Z]$"
+        if dni and not re.fullmatch(regex_dni, dni):
+            raise serializers.ValidationError("El formato del DNI no es correcto")
+        return dni
+
+    def validate(self, data):
+        if data.get("password1") != data.get("password2"):
+            raise serializers.ValidationError({"password2": "Las contraseñas no coinciden."})
+        return data
+    
+    def validate_fecha_nacimiento(self, fecha_nacimiento):
+        if fecha_nacimiento:
+            regex_fecha = r"^\d{4}-\d{2}-\d{2}$"
+            if not re.fullmatch(regex_fecha, fecha_nacimiento):
+                raise serializers.ValidationError("El formato de la fecha debe ser YYYY-MM-DD.")
+        return fecha_nacimiento

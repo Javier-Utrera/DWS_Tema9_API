@@ -51,5 +51,7 @@ urlpatterns =[
     path('vehiculos/editar/<int:vehiculo_id>', api_editar_vehiculo),
     path('vehiculos/actualizar/matricula/<int:vehiculo_id>', api_actualizar_vehiculo_matricula),
     path('vehiculos/eliminar/<int:vehiculo_id>', api_eliminar_vehiculo),
-       
+    
+    path('registrar/usuario',api_registrar_usuario.as_view()),
+    path('usuario/token/<str:token>',obtener_usuario_token)
 ]

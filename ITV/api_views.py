@@ -7,6 +7,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
+from django.contrib.auth.models import Group
 
 
 def api_errores(serializer,mensaje):
@@ -21,29 +24,50 @@ def api_errores(serializer,mensaje):
             return Response(repr(error),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-            
+def verificar_permiso(request, permiso):
+    print(f"Usuario autenticado en la API: {request.user}")
+    print(f"Permisos del usuario: {request.user.get_all_permissions()}")
+
+    if not request.user.has_perm(permiso):
+        return Response(
+            {"error": "No tienes permisos para realizar esta acción."},
+            status=status.HTTP_403_FORBIDDEN
+        )
+    return None          
 
 #Listar--------------------------------------------------------------------------------------------------------------------------------------------------------
 @api_view(['GET'])
 def api_listar_locales(request):
+    permiso = verificar_permiso(request, "ITV.view_local")  
+    if permiso:  
+        return permiso
     locales = Local.objects.all()
     serializer = LocalSerializer(locales, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def api_listar_clientes(request):
+    permiso = verificar_permiso(request, "ITV.view_cliente")  
+    if permiso:  
+        return permiso 
     clientes = Cliente.objects.prefetch_related('cliente_cita').all() 
     serializer=ClienteSerializerCompleto(clientes,many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def api_listar_citas(request):
+    permiso = verificar_permiso(request, "ITV.view_cita")  
+    if permiso:  
+        return permiso 
     citas = Cita.objects.select_related("cliente", "estacion").all()
     serializer=CitaSerializer(citas,many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def api_listar_trabajadores(request):
+    permiso = verificar_permiso(request, "ITV.view_trabajador")  
+    if permiso:  
+        return permiso 
     trabajadores=Trabajador.objects.prefetch_related("estacion",
                                                      Prefetch("trabajador_Inspeccion"),
                                                      Prefetch("trabajador_Vehiculo")).all()
@@ -52,20 +76,27 @@ def api_listar_trabajadores(request):
 
 @api_view(['GET'])
 def api_listar_vehiculos(request):
+    permiso = verificar_permiso(request, "ITV.view_vehiculo")  
+    if permiso:  
+        return permiso 
     vehiculos=Vehiculo.objects.select_related("propietario").prefetch_related("trabajadores",Prefetch("vehiculo_Inspeccion")).all()
     serializer=VehiculoSerializerCompleto(vehiculos,many=True)
-    # print(serializer.error_messages)
-    # print(serializer._data)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def api_listar_inspecciones(request):
+    permiso = verificar_permiso(request, "ITV.view_inspeccion")  
+    if permiso:  
+        return permiso 
     inspecciones=Inspeccion.objects.select_related("trabajador","vehiculo").prefetch_related(Prefetch("inspeccion_Factura")).all()
     serializer=InspeccionSerializer(inspecciones,many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def api_listar_estaciones(request):
+    permiso = verificar_permiso(request, "ITV.view_estacionitv")  
+    if permiso:  
+        return permiso 
     estaciones=EstacionItv.objects.select_related("local").all()
     serializer=EstacionSerializer(estaciones,many=True)
     return Response(serializer.data)
@@ -95,12 +126,13 @@ def api_trabajador_obtener(request, trabajador_id):
 def api_obtener_vehiculo(request, vehiculo_id):
     vehiculo = Vehiculo.objects.select_related("propietario").prefetch_related("trabajadores", Prefetch("vehiculo_Inspeccion")).get(id=vehiculo_id)
     serializer = VehiculoSerializerCompleto(vehiculo)
-    # print(serializer.error_messages)
-    # print(serializer._data)
     return Response(serializer.data)
 #Buscar-----------------------------------------------------------------------------------------------------------------------------------
 @api_view(['GET'])
 def api_buscar_local(request):
+    permiso = verificar_permiso(request, "ITV.view_local")  
+    if permiso:  
+        return permiso 
     if len(request.query_params) > 0:
         formulario = BusquedaAvanzadaLocal(request.GET)
         
@@ -133,6 +165,9 @@ def api_buscar_local(request):
 
 @api_view(['GET'])
 def api_buscar_cita(request):
+    permiso = verificar_permiso(request, "ITV.view_cita")  
+    if permiso:  
+        return permiso 
     if (len(request.query_params) > 0):
         formulario = BusquedaAvanzadaCita(request.GET)
         if formulario.is_valid():
@@ -165,6 +200,9 @@ def api_buscar_cita(request):
     
 @api_view(['GET'])
 def api_buscar_inspeccion(request):
+    permiso = verificar_permiso(request, "ITV.view_inpeccion")  
+    if permiso:  
+        return permiso 
     if (len(request.query_params) > 0):
         formulario = BusquedaAvanzadaInspeccion(request.GET)
         if formulario.is_valid():
@@ -197,6 +235,9 @@ def api_buscar_inspeccion(request):
 
 @api_view(['GET'])
 def api_buscar_vehiculo(request):
+    permiso = verificar_permiso(request, "ITV.view_vehiculo")  
+    if permiso:  
+        return permiso 
     if (len(request.query_params) > 0):
         formulario = BusquedaAvanzadaVehiculo(request.GET)
         if formulario.is_valid():
@@ -229,6 +270,9 @@ def api_buscar_vehiculo(request):
     
 @api_view(['GET'])
 def api_buscar_trabajador(request):
+    permiso = verificar_permiso(request, "ITV.view_trabajador")  
+    if permiso:  
+        return permiso 
     if (len(request.query_params) > 0):
         formulario = BusquedaAvanzadaTrabajador(request.GET)
         if formulario.is_valid():
@@ -263,47 +307,71 @@ def api_buscar_trabajador(request):
 #POST-----------------------------------------------------------------------------------------------------------------------------------
 @api_view(['POST'])
 def api_crear_local(request):
+    permiso = verificar_permiso(request, "ITV.add_local")  
+    if permiso:  
+        return permiso 
     print(request.data)
     localSerializer = LocalSerializerCreate(data=request.data)
     return api_errores(localSerializer, "Local CREADO")
 
 @api_view(['POST'])
 def api_crear_cita(request):
+    permiso = verificar_permiso(request, "ITV.add_cita")  
+    if permiso:  
+        return permiso
     print(request.data)
     citaSerializerCreate = CitaSerializerCreate(data=request.data)
     return api_errores(citaSerializerCreate,"Cita CREADA")
 
 @api_view(['POST'])
 def api_crear_trabajador(request):
+    permiso = verificar_permiso(request, "ITV.add_trabajador")  
+    if permiso:  
+        return permiso
     serializer = TrabajadorSerializerCreate(data=request.data)
     return api_errores(serializer, "Trabajador CREADO")
 
 @api_view(['POST'])
 def api_crear_vehiculo(request):
+    permiso = verificar_permiso(request, "ITV.add_vehiculo")  
+    if permiso:  
+        return permiso
     serializer = VehiculoSerializerCreate(data=request.data)
     return api_errores(serializer, "Vehículo CREADO")
     
 #PUT---------------------------------------------------------------------------------------------------------------------------------------
 @api_view(['PUT'])
 def api_editar_local(request, local_id):
+    permiso = verificar_permiso(request, "ITV.change_local")  
+    if permiso:  
+        return permiso
     local = Local.objects.get(id=local_id)
     localSerializer = LocalSerializerCreate(data=request.data, instance=local)
     return api_errores(localSerializer, "Local EDITADO")
 
 @api_view(['PUT'])
 def api_editar_cita(request,cita_id):
+    permiso = verificar_permiso(request, "ITV.change_cita")  
+    if permiso:  
+        return permiso
     cita=Cita.objects.get(id=cita_id)
     citaSerializerCreate = CitaSerializerCreate(data=request.data,instance=cita)
     return api_errores(citaSerializerCreate,"Cita EDITADA")
 
 @api_view(['PUT'])
 def api_editar_trabajador(request, trabajador_id):
+    permiso = verificar_permiso(request, "ITV.change_trabajdor")  
+    if permiso:  
+        return permiso
     trabajador = Trabajador.objects.get(id=trabajador_id)
     serializer = TrabajadorSerializerCreate(data=request.data, instance=trabajador)
     return api_errores(serializer, "Trabajador EDITADO")
 
 @api_view(['PUT'])
 def api_editar_vehiculo(request, vehiculo_id):
+    permiso = verificar_permiso(request, "ITV.change_vehiculo")  
+    if permiso:  
+        return permiso
     vehiculo = Vehiculo.objects.get(id=vehiculo_id)
     print("📌 JSON recibido en la API (PUT):", request.data)
     serializer = VehiculoSerializerCreate(data=request.data, instance=vehiculo)
@@ -312,31 +380,46 @@ def api_editar_vehiculo(request, vehiculo_id):
 #PATCH----------------------------------------------------------------------------------------------------------------------------------------
 @api_view(['PATCH'])
 def api_actualizar_local_duenio(request, local_id):
+    permiso = verificar_permiso(request, "ITV.change_local")  
+    if permiso:  
+        return permiso
     local = Local.objects.get(id=local_id)
     serializer = LocalSerializerActualizarDuenio(data=request.data, instance=local)
     return api_errores(serializer, "Dueño del local EDITADO")
 
 @api_view(['PATCH'])
 def api_actualizar_cita_matricula(request,cita_id):
+    permiso = verificar_permiso(request, "ITV.change_cita")  
+    if permiso:  
+        return permiso
     cita=Cita.objects.get(id=cita_id)
     serializers = CitaSerializerActualizarMatricula(data=request.data, instance = cita)
     return api_errores(serializers,"Matricula de la cita EDITADA")
 
 @api_view(['PATCH'])
 def api_actualizar_trabajador_puesto(request, trabajador_id):
+    permiso = verificar_permiso(request, "ITV.change_trabajdor")  
+    if permiso:  
+        return permiso
     trabajador = Trabajador.objects.get(id=trabajador_id)
     serializer = TrabajadorSerializerActualizarPuesto(data=request.data, instance=trabajador)
     return api_errores(serializer, "Puesto del Trabajador EDITADO")
 
 @api_view(['PATCH'])
 def api_actualizar_vehiculo_matricula(request, vehiculo_id):
-    print(f"📌 ID del vehículo recibido: {vehiculo_id}") 
+    permiso = verificar_permiso(request, "ITV.change_vehiculo")  
+    if permiso:  
+        return permiso
+    print(f"ID del vehículo recibido: {vehiculo_id}") 
     vehiculo = Vehiculo.objects.get(id=vehiculo_id)
     serializer = VehiculoSerializerActualizarMatricula(data=request.data, instance=vehiculo)
     return api_errores(serializer, "Matrícula del Vehículo ACTUALIZADA")
 #DELETE----------------------------------------------------------------------------------------------------------------------------------------
 @api_view(['DELETE'])
 def api_eliminar_local(request, local_id):
+    permiso = verificar_permiso(request, "ITV.delete_local")  
+    if permiso:  
+        return permiso
     local = Local.objects.get(id=local_id)
     try:
         local.delete()
@@ -346,6 +429,9 @@ def api_eliminar_local(request, local_id):
     
 @api_view(['DELETE'])
 def api_eliminar_cita(request,cita_id):
+    permiso = verificar_permiso(request, "ITV.delete_cita")  
+    if permiso:  
+        return permiso
     cita=Cita.objects.get(id=cita_id)
     try:
         cita.delete()
@@ -355,6 +441,9 @@ def api_eliminar_cita(request,cita_id):
     
 @api_view(['DELETE'])
 def api_eliminar_trabajador(request, trabajador_id):
+    permiso = verificar_permiso(request, "ITV.delete_trabajador")  
+    if permiso:  
+        return permiso
     trabajador = Trabajador.objects.get(id=trabajador_id)
     try:
         trabajador.delete()
@@ -364,7 +453,9 @@ def api_eliminar_trabajador(request, trabajador_id):
     
 @api_view(['DELETE'])
 def api_eliminar_vehiculo(request, vehiculo_id):
-
+    permiso = verificar_permiso(request, "ITV.delete_vehiculo")  
+    if permiso:  
+        return permiso
     vehiculo = Vehiculo.objects.get(id=vehiculo_id)
     try:
         vehiculo.delete()
@@ -383,3 +474,71 @@ class LocalViewSet(viewsets.ModelViewSet):
             return LocalSerializerCreate
         # Para listar y obtener usamos el serializer completo
         return LocalSerializer
+    
+    
+class api_registrar_usuario(generics.CreateAPIView):
+    serializer_class = UsuarioSerializerRegistro
+    permission_classes = [AllowAny]
+    
+    def create(self, request, *args, **kwargs):
+        serializers = UsuarioSerializerRegistro(data=request.data)
+        
+        print("Datos Recibidos:", request.data)  
+        
+        if not serializers.is_valid():  
+            print("Errores en el serializer:", serializers.errors)  
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        if serializers.is_valid():
+            try:
+                rol= int(request.data.get('rol'))
+
+                user = Usuario.objects.create_user(
+                        username=serializers.validated_data.get("username"), 
+                        email=serializers.validated_data.get("email"), 
+                        password=serializers.validated_data.get("password1"),
+                        rol=rol,
+                )
+                user.save()
+
+                if rol == Usuario.CLIENTE:
+                    grupo = Group.objects.get(name='Clientes')
+                    grupo.user_set.add(user)
+                    cliente = Cliente.objects.create(
+                        usuario=user,
+                        nombre=serializers.validated_data.get("username"),
+                        email=serializers.validated_data.get("email"),
+                        fecha_nacimiento=serializers.validated_data.get("fecha_nacimiento"),
+                        apellidos=serializers.validated_data.get("apellidos"),
+                        dni=serializers.validated_data.get("dni")
+                    )
+                    cliente.save()
+
+                elif rol == Usuario.TRABAJADOR:
+                    grupo = Group.objects.get(name='Trabajadores')
+                    grupo.user_set.add(user)
+                    trabajador = Trabajador.objects.create(
+                        usuario=user,
+                        email=serializers.validated_data.get("email"),
+                        nombre=serializers.validated_data.get("username"),
+                        puesto=serializers.validated_data.get("puesto")
+                    )
+                    trabajador.save()
+
+                usuarioSerializado = UsuarioSerializer(user)
+                return Response(usuarioSerializado.data)
+
+            except Exception as error:
+                print(repr(error))
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        
+from oauth2_provider.models import AccessToken     
+@api_view(['GET'])
+def obtener_usuario_token(request,token):
+    ModeloToken = AccessToken.objects.get(token=token)
+    usuario = Usuario.objects.get(id=ModeloToken.user_id)
+    serializer = UsuarioSerializer(usuario)
+    return Response(serializer.data)

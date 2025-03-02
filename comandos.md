@@ -4,6 +4,8 @@ curl -X POST "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&usernam
 
 curl -X POST "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&username=trabajador1&password=contraseña1&client_id=mi_aplicacion&client_secret=mi_clave_secreta"
 
+curl -X POST "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&username=cliente4&password=contraseña1&client_id=mi_aplicacion&client_secret=mi_clave_secreta"
+
 Descargar proyecto con GIT
 sudo apt-get install python3-venv  -> Sino está instalado ya
 No situamos en la carpeta 2daw
