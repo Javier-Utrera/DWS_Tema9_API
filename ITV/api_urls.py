@@ -53,5 +53,11 @@ urlpatterns =[
     path('vehiculos/eliminar/<int:vehiculo_id>', api_eliminar_vehiculo),
     
     path('registrar/usuario',api_registrar_usuario.as_view()),
-    path('usuario/token/<str:token>',obtener_usuario_token)
+    path('usuario/token/<str:token>',obtener_usuario_token),
+    
+    path('vehiculos/listar_vehiculos_cliente',api_listar_vehiculos_cliente),
+    path('citas/listar_citas_cliente',api_listar_citas_cliente),
+    
+    path('citas/crear_cliente', api_crear_cita_cliente, name="api_crear_cita_cliente"),
+    path('vehiculos/crear_cliente', api_crear_vehiculo_cliente, name="api_crear_vehiculo_cliente"),    
 ]

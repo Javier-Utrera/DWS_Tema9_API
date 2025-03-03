@@ -542,3 +542,85 @@ def obtener_usuario_token(request,token):
     usuario = Usuario.objects.get(id=ModeloToken.user_id)
     serializer = UsuarioSerializer(usuario)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def api_listar_citas_cliente(request):
+    permiso = verificar_permiso(request, "ITV.view_cita")  
+    if permiso:  
+        return permiso
+    try:
+        usuario = request.user
+        rol= int(usuario.rol)
+        if rol == Usuario.ADMINISTRADOR:  
+            citas = Cita.objects.all()  
+        else:
+            cliente = Cliente.objects.filter(usuario=usuario).first()  
+            citas = Cita.objects.filter(cliente=cliente)
+        serializer = CitaSerializer(citas, many=True)
+        return Response(serializer.data)
+    except Exception as error:
+        return Response({"error": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])   
+def api_listar_vehiculos_cliente(request):
+    permiso = verificar_permiso(request, "ITV.view_vehiculo")  
+    if permiso:  
+        return permiso
+    try:
+        usuario = request.user  
+        rol= int(usuario.rol)
+        if rol == Usuario.ADMINISTRADOR:  
+            vehiculos = Vehiculo.objects.all()
+        else:
+            cliente = Cliente.objects.filter(usuario=usuario).first()  
+            vehiculos = Vehiculo.objects.filter(propietario=cliente)
+
+        serializer = VehiculoSerializer(vehiculos, many=True)
+        return Response(serializer.data)
+
+    except Exception as error:
+        return Response({"error": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(["POST"])    
+def api_crear_cita_cliente(request):
+    try:
+        usuario = request.user
+        cliente = Cliente.objects.filter(usuario=usuario).first()
+
+        if not cliente:
+            return Response({"error": "No eres un cliente registrado."}, status=status.HTTP_403_FORBIDDEN)
+
+        data = request.data.copy()
+        data["cliente"] = cliente.id
+
+        serializer = CitaSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+def api_crear_vehiculo_cliente(request):
+    try:
+        usuario = request.user
+        cliente = Cliente.objects.filter(usuario=usuario).first()
+
+        if not cliente:
+            return Response({"error": "No eres un cliente registrado."}, status=status.HTTP_403_FORBIDDEN)
+
+        data = request.data.copy()
+        data["propietario"] = cliente.id
+
+        serializer = VehiculoSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

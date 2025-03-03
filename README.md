@@ -374,3 +374,81 @@ En el template de login.html he creado con boostrap un pequeño div para que al 
         </div>
     </div>
 </div>
+
+
+# Documentación de Permisos en la API
+
+Esta API gestiona los permisos de acceso de los usuarios, los cuales pueden ser de tres tipos:
+
+- **Admin**: Tiene acceso total a todas las funcionalidades.
+- **Trabajador**: Tiene permisos específicos para gestionar inspecciones y facturas.
+- **Cliente**: Tiene permisos para gestionar citas y vehículos.
+
+## Tipo de Usuarios y Permisos
+
+### 1. **Administrador** (Admin)
+
+El **Administrador** tiene permisos completos para gestionar todos los aspectos de la API, incluyendo la creación, edición y eliminación de todos los modelos, así como la gestión de permisos y autenticación.
+
+#### Permisos:
+'ITV.view_local'
+'ITV.view_cita'
+'ITV.add_maquinaria'
+'ITV.add_usuario'
+'ITV.change_trabajador'
+'ITV.add_cliente'
+'ITV.change_usuario'
+'ITV.add_vehiculo'
+'ITV.view_vehiculo'
+'ITV.change_local'
+'ITV.delete_empresaexterna'
+'ITV.view_usuario'
+'ITV.add_inspeccion'
+'ITV.change_empresaexterna'
+'ITV.view_trabajador'
+'ITV.change_maquinaria'
+'ITV.change_estacionitv'
+'ITV.add_cita'
+'ITV.view_estacionitv'
+'ITV.view_maquinaria'
+'ITV.change_factura'
+'ITV.add_empresaexterna'
+'ITV.view_cliente'
+'ITV.delete_vehiculo'
+'ITV.add_local'
+'ITV.add_estacionitv'
+'ITV.view_empresaexterna'
+'ITV.delete_estacionitv'
+'ITV.delete_factura'
+'ITV.add_trabajador'
+'ITV.change_inspeccion'
+'ITV.add_factura'
+'ITV.change_cita'
+
+### 2. **Trabajador** (Trabajador)
+
+El **Trabajador** tiene permisos limitados para gestionar inspecciones y facturas. Este perfil no puede gestionar usuarios ni locales, pero sí puede cambiar la información relacionada con las inspecciones y las facturas.
+
+#### Permisos:
+'ITV.change_factura'
+'ITV.add_inspeccion'
+'ITV.view_factura'
+'ITV.delete_inspeccion'
+'ITV.delete_factura'
+'ITV.view_inspeccion'
+'ITV.change_inspeccion'
+'ITV.add_factura'
+
+### 3. **Cliente** (Cliente)
+
+El **Cliente** tiene permisos para gestionar sus citas y vehículos. No tiene acceso a la administración de inscripciones ni a la edición de otros usuarios.
+
+#### Permisos:
+'ITV.view_cita'
+'ITV.change_vehiculo'
+'ITV.delete_vehiculo'
+'ITV.delete_cita'
+'ITV.add_cita'
+'ITV.add_vehiculo'
+'ITV.view_vehiculo'
+'ITV.change_cita'
