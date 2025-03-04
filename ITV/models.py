@@ -117,7 +117,10 @@ class Vehiculo(models.Model):
     #relaciones
     #Para relacionar vehiculo con trabajador usando la tabla intermedia Inspeccion
     trabajadores = models.ManyToManyField(Trabajador, through='Inspeccion' ,related_name="trabajador_Vehiculo")
-    propietario = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='propietario_vehiculo')
+    propietario = models.ForeignKey(
+        Cliente, on_delete=models.CASCADE, related_name='propietario_vehiculo',
+        null=True, blank=True
+    )
     #
     fecha_matriculacion=models.DateField()
     marca=models.CharField(max_length=50)

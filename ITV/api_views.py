@@ -10,20 +10,23 @@ from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import Group
+import traceback
 
-
-def api_errores(serializer,mensaje):
+def api_errores(serializer, mensaje):
     if serializer.is_valid():
         try:
             serializer.save()
-            return Response(mensaje)
-        except serializer.ValidationError as error:
-            return Response(error.detail,status=status.HTTP_400_BAD_REQUEST)
+            return Response({"mensaje": mensaje}, status=status.HTTP_201_CREATED)  # ✅ Devuelve JSON válido
+        
         except Exception as error:
-            print(repr(error))
-            return Response(repr(error),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            print("❌ ERROR 500 en la API:", repr(error))
+            traceback.print_exc() 
+            return Response({"error": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
     else:
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        print("🚨 ERRORES DEL SERIALIZADOR:", serializer.errors)
+        return Response({"errores": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)  # ✅ Estructura JSON correcta
+    
 def verificar_permiso(request, permiso):
     print(f"Usuario autenticado en la API: {request.user}")
     print(f"Permisos del usuario: {request.user.get_all_permissions()}")
@@ -200,7 +203,7 @@ def api_buscar_cita(request):
     
 @api_view(['GET'])
 def api_buscar_inspeccion(request):
-    permiso = verificar_permiso(request, "ITV.view_inpeccion")  
+    permiso = verificar_permiso(request, "ITV.view_inspeccion")  
     if permiso:  
         return permiso 
     if (len(request.query_params) > 0):
@@ -222,7 +225,7 @@ def api_buscar_inspeccion(request):
                 QSinspecciones=QSinspecciones.filter(notas_inspeccion__contains=notas_inspeccionv)
                 mensaje+="Texto de la inspeccion por el que se ha buscado " + notas_inspeccionv + "\n"
             if(not fecha_inspeccionv is None):
-                QSinspecciones=QSinspecciones.filter(fecha_inspeccion=fecha_inspeccionv)
+                QSinspecciones=QSinspecciones.filter(fecha_inspeccion__gte=fecha_inspeccionv)
                 mensaje+="La fecha por la que se esta buscando es" + datetime.strftime(fecha_inspeccionv,'%d-%m-%Y')+"\n"
             
             inspecciones=QSinspecciones.all()
@@ -251,7 +254,7 @@ def api_buscar_vehiculo(request):
             
             
             if(marcav != ""):
-                QSvehiculos=QSvehiculos.filter(marca=marcav)
+                QSvehiculos=QSvehiculos.filter(marca__icontains=marcav)
                 mensaje+="Marca que se ha buscado " + marcav  +"\n"
             if(potenciav is not None):
                 QSvehiculos=QSvehiculos.filter(potencia=potenciav)
@@ -336,6 +339,8 @@ def api_crear_vehiculo(request):
     permiso = verificar_permiso(request, "ITV.add_vehiculo")  
     if permiso:  
         return permiso
+    print("📌 JSON recibido en la API:", request.data)  
+
     serializer = VehiculoSerializerCreate(data=request.data)
     return api_errores(serializer, "Vehículo CREADO")
     
@@ -350,13 +355,17 @@ def api_editar_local(request, local_id):
     return api_errores(localSerializer, "Local EDITADO")
 
 @api_view(['PUT'])
-def api_editar_cita(request,cita_id):
+def api_editar_cita(request, cita_id):
     permiso = verificar_permiso(request, "ITV.change_cita")  
     if permiso:  
         return permiso
-    cita=Cita.objects.get(id=cita_id)
-    citaSerializerCreate = CitaSerializerCreate(data=request.data,instance=cita)
-    return api_errores(citaSerializerCreate,"Cita EDITADA")
+    cita = Cita.objects.get(id=cita_id)
+    print("📌 JSON recibido en la API (PUT):", request.data)
+    serializer = CitaSerializerCreate(data=request.data, instance=cita)
+    if not serializer.is_valid():
+        print("🚨 Errores en el serializador:", serializer.errors)
+    serializer.save()
+    return api_errores(serializer, "Cita EDITADA")
 
 @api_view(['PUT'])
 def api_editar_trabajador(request, trabajador_id):

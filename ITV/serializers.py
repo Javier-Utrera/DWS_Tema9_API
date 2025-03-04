@@ -274,10 +274,13 @@ class TrabajadorSerializerActualizarPuesto(serializers.ModelSerializer):
             raise serializers.ValidationError("Seleccione un puesto válido.")
         return puesto
 
+class TrabajadorIDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trabajador
+        fields = ['id']
+class VehiculoSerializerCreate(serializers.ModelSerializer): 
+    trabajadores = TrabajadorIDSerializer(many=True)
 
-class VehiculoSerializerCreate(serializers.ModelSerializer):
-    
-    trabajadores = TrabajadorSoloSerializer(many=True)
     class Meta:
         model = Vehiculo
         fields = ['marca', 'modelo', 'numero_bastidor', 'tipo_vehiculo', 'cilindrada',
@@ -300,11 +303,10 @@ class VehiculoSerializerCreate(serializers.ModelSerializer):
         return cilindrada
 
     def create(self, validated_data):
-        trabajadores = self.initial_data.get('trabajadores', [])
-        if len(trabajadores) < 1:
-            raise serializers.ValidationError(
-                {'trabajadores': ['Debe seleccionar al menos un trabajador.']}
-            )
+        trabajadores_data = self.initial_data.get('trabajadores', [])
+        if len(trabajadores_data) < 1:
+            raise serializers.ValidationError({'trabajadores': ['Debe seleccionar al menos un trabajador.']})
+
         vehiculo = Vehiculo.objects.create(
             marca=validated_data["marca"],
             modelo=validated_data["modelo"],
@@ -321,18 +323,18 @@ class VehiculoSerializerCreate(serializers.ModelSerializer):
             fecha_matriculacion=validated_data["fecha_matriculacion"],
         )
 
-        for trabajador_id in trabajadores:
-            trabajador_obj = Trabajador.objects.get(id=trabajador_id)
-            Inspeccion.objects.create(trabajador_id=trabajador_obj, vehiculo=vehiculo)
+        trabajadores_ids = [trabajador["id"] for trabajador in trabajadores_data]
+        trabajadores_objs = Trabajador.objects.filter(id__in=trabajadores_ids)
+
+        vehiculo.trabajadores.set(trabajadores_objs)
+
         return vehiculo
 
     def update(self, instance, validated_data):
-        trabajadores = self.initial_data.get('trabajadores', [])
+        trabajadores_data = self.initial_data.get('trabajadores', [])
 
-        if len(trabajadores) < 1:
-            raise serializers.ValidationError(
-                {'trabajadores': ['Debe seleccionar al menos un trabajador.']}
-            )
+        if len(trabajadores_data) < 1:
+            raise serializers.ValidationError({'trabajadores': ['Debe seleccionar al menos un trabajador.']})
 
         instance.marca = validated_data.get("marca", instance.marca)
         instance.modelo = validated_data.get("modelo", instance.modelo)
@@ -350,10 +352,10 @@ class VehiculoSerializerCreate(serializers.ModelSerializer):
 
         instance.save()
 
-        instance.trabajadores.clear()
-        for trabajador_id in trabajadores:
-            trabajador_obj = Trabajador.objects.get(id=trabajador_id)
-            Inspeccion.objects.create(trabajador_id=trabajador_obj, vehiculo=instance)
+        trabajadores_ids = [trabajador["id"] for trabajador in trabajadores_data]
+        trabajadores_objs = Trabajador.objects.filter(id__in=trabajadores_ids)
+
+        instance.trabajadores.set(trabajadores_objs)
 
         return instance
     
